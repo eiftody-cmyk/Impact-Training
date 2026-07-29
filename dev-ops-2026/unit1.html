@@ -1,1 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Training Japan - Unit 1: Facilitating Meetings</title>
+    <style>
+        /* IMPACT TRAINING JAPAN BRANDING PALETTE */
+        :root {
+            --primary-dark: #1e293b;  /* Slate/Charcoal Backgrounds & Headers */
+            --impact-red: #dc2626;    /* Accent Signature Red */
+            --impact-dark-red: #991b1b;
+            --bg-light: #f8fafc;      /* Clean Minimal Canvas */
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #334155;
+        }
 
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-light);
+            position: relative; /* For popup positioning */
+        }
+
+        /* BRAND HEADERS & LOGO */
+        .brand-nav {
+            border-bottom: 3px solid var(--impact-red);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container img.brand-logo-img {
+            max-height: 70px; /* Adjust this value to scale your uploaded logo */
+            width: auto;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            font-size: 2.2em;
+            margin-top: 10px;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 40px;
+            font-size: 1.6em;
+        }
+
+        h3 {
+            color: var(--impact-dark-red);
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #64748b;
+            margin-top: -10px;
+            margin-bottom: 30px;
+        }
+
+        /* LAYOUT CARDS */
+        .content-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .accent-strip-red { border-left: 5px solid var(--impact-red); }
+        .accent-strip-dark { border-left: 5px solid var(--primary-dark); }
+        .accent-strip-gray { border-left: 5px solid #64748b; }
+
+        /* ARTWORK PLACEHOLDER */
+        .artwork-placeholder {
+            background-color: #e2e8f0;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 35px;
+            color: #64748b;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* AUDIO SYSTEM */
+        .audio-section {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 6px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .audio-text {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* NATIVE INTERACTIVE VOCABULARY */
+        details.vocab-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease-index;
+        }
+
+        details.vocab-card[open] {
+            border-left: 4px solid var(--impact-red);
+            background: #fff1f2;
+        }
+
+        summary.vocab-term {
+            font-weight: bold;
+            color: var(--primary-dark);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary.vocab-term::-webkit-details-marker {
+            display: none;
+        }
+
+        summary.vocab-term::after {
+            content: "💡 Tap to reveal";
+            font-size: 0.85em;
+            color: var(--impact-red);
+            font-weight: normal;
+        }
+
+        details[open] summary.vocab-term::after {
+            content: "📖 Close definition";
+            color: var(--primary-dark);
+        }
+
+        .vocab-definition {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed #fca5a5;
+            color: #475569;
+        }
+
+        /* CLICKABLE DIALOGUE VOCABULARY & POPUP */
+        .dialogue-vocab {
+            color: var(--impact-red);
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 1px dotted var(--impact-red);
+            transition: background-color 0.2s;
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+
+        .dialogue-vocab:hover {
+            background-color: #fee2e2;
+        }
+
+        #vocab-popup {
+            display: none;
+            position: absolute;
+            background: var(--primary-dark);
+            color: #ffffff;
+            padding: 12px 18px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            max-width: 280px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-left: 4px solid var(--impact-red);
+            pointer-events: none; /* Prevents popup from interfering with clicks */
+        }
+
+        /* WARM-UP INPUT FIELDS */
+        .warmup-input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            resize: none;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .warmup-input:focus {
+            outline: none;
+            border: 2px solid var(--impact-red);
+            background-color: #fff;
+        }
+
+        /* INTERACTIVE GRAMMAR REGION */
+        .gap-fill-input {
+            border: none;
+            border-bottom: 2px solid #94a3b8;
+            width: 130px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--impact-dark-red);
+            background: transparent;
+            font-size: 1em;
+        }
+
+        .gap-fill-input:focus {
+            outline: none;
+            border-bottom: 2px solid var(--impact-red);
+            background: #f8fafc;
+        }
+
+        .correct { border-bottom: 2px solid #10b981 !important; background: #d1fae5; color: #10b981; }
+        .incorrect { border-bottom: 2px solid #ef4444 !important; background: #fee2e2; color: #ef4444; }
+
+        .btn-primary {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--impact-red);
+        }
+
+        /* 3-STUDENT ROTATION STYLE */
+        .grid-3-student {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .student-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .student-card.facilitator {
+            border-top: 4px solid var(--impact-red);
+            background: #fff1f2;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BRAND TOP BAR -->
+    <div class="brand-nav">
+        <!-- Logo Image Spot -->
+        <div class="logo-container">
+            <img src="logo.png" alt="Impact Training Services Logo" class="brand-logo-img">
+        </div>
+        <div><a href="index.html" style="color: var(--primary-dark); text-decoration: none; font-weight: bold;">← Back to Course Index</a></div>
+    </div>
+
+    <h1>Unit 1: Facilitating Meetings</h1>
+    <p class="subtitle">Experiential Learning Framework · Present Simple Tense</p>
+
+    <!-- ARTWORK PLACEHOLDER -->
+    <div class="artwork-placeholder">
+        <span>🖼️ [ Artwork Placeholder: Insert Executive Corporate Meeting Illustration Here ] <br> <small>(Dimensions Optimized for 900x220px)</small></span>
+    </div>
+
+    <!-- MAIN SKILL FOCUS (UPDATED FROM image_6441b5.png) -->
+    <h2>1. Core Skill: Facilitating Meetings</h2>
+    <div class="content-card accent-strip-red">
+        <h3>KEY POINTS</h3>
+        <p>Facilitating includes stating objectives, asking for input, clarifying, summarizing, keeping things on topic and moving on. Everyone should help to facilitate (for example by inviting other people to speak) to achieve good meeting outcomes.</p>
+        
+        <h3>State objective:</h3>
+        <ul>
+            <li><em>"Today, we are talking about ideas for implementing remote monitoring systems in upcoming trials."</em></li>
+        </ul>
+
+        <h3>Ask for input:</h3>
+        <ul>
+            <li><em>"Ken, any ideas?"</em></li>
+            <li><em>"Does anyone else have any comments / ideas / suggestions?"</em></li>
+        </ul>
+
+        <h3>Clarifying:</h3>
+        <ul>
+            <li><em>"Do you mean we should prioritize real-time data sync for patient safety?"</em></li>
+        </ul>
+
+        <h3>Keeping on track/Moving on:</h3>
+        <ul>
+            <li><em>"Anything else?"</em></li>
+        </ul>
+
+        <h3>Summarizing:</h3>
+        <ul>
+            <li><em>"OK, so to summarize, we have two ideas for using remote monitoring. One is to set up wearable sensors for continuous vital sign tracking and the other is to use digital diaries for patient-reported outcomes. Is that OK with everyone?"</em></li>
+        </ul>
+
+        <h3>Giving actions:</h3>
+        <ul>
+            <li><em>"Michiko, could you email Saito-san with our ideas? And Atsushi, could you prepare a training workshop based on our ideas? Thanks. That's all for today. See you next Tuesday."</em></li>
+        </ul>
+    </div>
+
+    <!-- DIALOGUE TRANSCRIPT & POPUP ELEMENT -->
+    <h2>2. Dialogue: Enrollment Bottlenecks</h2>
+    
+    <!-- Dynamic Popup Container -->
+    <div id="vocab-popup"></div>
+
+    <div class="audio-section">
+        <div class="audio-text">
+            <strong>🎧 Audio Track: Unit 1 Dialogue</strong>
+            <p style="margin: 3px 0 0 0; font-size: 0.9em; color: #64748b;">A CRA and an Investigator debate clinical eligibility boundaries. Click the highlighted words for definitions.</p>
+        </div>
+        <audio controls>
+            <source src="audio/unit1_dialogue.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <div class="content-card accent-strip-dark">
+        <p><strong>CRA (Sarah):</strong> Good morning, Dr. Takahashi. I wanted to review our <span class="dialogue-vocab" data-def="The specific number of patients required to complete a clinical trial phase.">enrollment target</span> for the Compound XYZ bladder cancer study. As you know, our site target is ten <span class="dialogue-vocab" data-def="Patients who meet all criteria and whose data can be officially used in the trial's final analysis.">evaluable subjects</span> by the end of next quarter.</p>
+        
+        <p><strong>Investigator (Dr. Takahashi):</strong> Good morning, Sarah. We are actively reviewing our <span class="dialogue-vocab" data-def="Official records tracking all patients screened, enrolled, or excluded at a clinical site.">patient logs</span>, but the strict <span class="dialogue-vocab" data-def="The specific baseline requirements a patient must meet to participate legally in a clinical trial.">inclusion criteria</span> make screening quite challenging. Specifically, the required baseline <span class="dialogue-vocab" data-def="Measurable biological indicators found in laboratory tests that reveal a patient's exact physical state.">biomarker levels</span> exclude several otherwise ideal candidates.</p>
+        
+        <p><strong>CRA (Sarah):</strong> I understand completely. However, maintaining strict adherence to these criteria ensures <span class="dialogue-vocab" data-def="The assurance that information gathered during research remains accurate, complete, reliable, and unaltered.">data integrity</span> during our <span class="dialogue-vocab" data-def="A formal evaluation of clinical trial tracking data executed at specific milestones before the official trial reaches its absolute conclusion.">interim analysis</span>. Are there any specific pre-screening hurdles where the global team can offer administrative support?</p>
+        
+        <p><strong>Investigator (Dr. Takahashi):</strong> We receive many referrals, but patients frequently undergo prior <span class="dialogue-vocab" data-def="Treatments, such as chemotherapy, that spread throughout the entire body to treat cancer cells wherever they may be.">systemic therapies</span> that automatically disqualify them. If we could expand our screening window, it might help us hit the enrollment milestone on time.</p>
+        
+        <p><strong>CRA (Sarah):</strong> That is a fair point, doctor. The sponsor reviews <span class="dialogue-vocab" data-def="An accidental or deliberate instance where operations fail to follow the official study design handbook.">protocol deviations</span> weekly, but changing the core criteria would require a formal <span class="dialogue-vocab" data-def="A formal, globally approved change to the core clinical study protocol.">amendment</span>. For now, let’s focus closely on identifying early-stage patients before they initiate standard lines of therapy.</p>
+        
+        <p><strong>Investigator (Dr. Takahashi):</strong> Agreed. My team monitors incoming <span class="dialogue-vocab" data-def="Medical documents detailing the diagnosis of disease based on the laboratory analysis of bodily tissues or fluids.">pathology reports</span> daily to flag potential candidates immediately. We remain fully committed to meeting the target safely and compliantly.</p>
+    </div>
+
+    <!-- NEW INTERACTIVE VOCABULARY SECTION -->
+    <h2>3. Interactive Key Vocabulary</h2>
+    <p style="color: #64748b; margin-top: -10px; margin-bottom: 15px;">Click directly on each corporate/clinical term to test your comprehension and display its professional usage definition.</p>
+    
+    <div style="margin-bottom: 35px;">
+        <details class="vocab-card">
+            <summary class="vocab-term">Inclusion Criteria</summary>
+            <div class="vocab-definition">
+                <strong>Definition:</strong> The specific baseline requirements (such as age, disease stage, or laboratory values) that a patient must meet to participate legally in a clinical trial.
+            </div>
+        </details>
+
+        <details class="vocab-card">
+            <summary class="vocab-term">Data Integrity</summary>
+            <div class="vocab-definition">
+                <strong>Definition:</strong> The assurance that information gathered during research remains accurate, complete, reliable, and unaltered throughout its entire lifecycle.
+            </div>
+        </details>
+
+        <details class="vocab-card">
+            <summary class="vocab-term">Protocol Deviation</summary>
+            <div class="vocab-definition">
+                <strong>Definition:</strong> An accidental or deliberate instance where operations fail to follow the official study design handbook or regulatory guide.
+            </div>
+        </details>
+
+        <details class="vocab-card">
+            <summary class="vocab-term">Biomarker Levels</summary>
+            <div class="vocab-definition">
+                <strong>Definition:</strong> Measurable biological indicators found in laboratory tests that reveal a patient's exact physical state or medical response to therapies.
+            </div>
+        </details>
+
+        <details class="vocab-card">
+            <summary class="vocab-term">Interim Analysis</summary>
+            <div class="vocab-definition">
+                <strong>Definition:</strong> A formal evaluation of clinical trial tracking data executed at specific milestones before the official trial reaches its absolute conclusion.
+            </div>
+        </details>
+    </div>
+
+    <!-- NEW INPUT WARMUP DISCUSSION SECTION -->
+    <h2>4. Production: Output with Your Ideas</h2>
+    <div class="content-card accent-strip-gray">
+        <p><strong>Pre-Exercise Discussion:</strong> Use these open-ended analytical questions to activate your professional background knowledge. Type your brief answers directly into the boxes below, then share them aloud with your small group.</p>
+        
+        <label class="output-question" for="w1">1. What does MHLW do to evaluate the effectiveness of the drug in your current study?</label>
+        <textarea class="warmup-input" id="w1" placeholder="Type your ideas here..."></textarea>
+
+        <label class="output-question" for="w2">2. What do subjects receive before enrolling in the study?</label>
+        <textarea class="warmup-input" id="w2" placeholder="Type your ideas here..."></textarea>
+
+        <label class="output-question" for="w3">3. How often does the investigator measure participants’ vital signs?</label>
+        <textarea class="warmup-input" id="w3" placeholder="Type your ideas here..."></textarea>
+
+        <label class="output-question" for="w4">4. When does data analysis occur in the trial phases?</label>
+        <textarea class="warmup-input" id="w4" placeholder="Type your ideas here..."></textarea>
+
+        <label class="output-question" for="w5">5. Where does the team publish the findings of the study?</label>
+        <textarea class="warmup-input" id="w5" placeholder="Type your ideas here..."></textarea>
+    </div>
+
+    <!-- GRAMMAR DRILLS -->
+    <h2>5. Interactive Grammar: Present Simple Tense</h2>
+    <div class="content-card accent-strip-dark">
+        <p>Conjugate the active verbs located in parentheses to solidify standard structural habits for clinical reporting.</p>
+        
+        <form id="grammar-form">
+            <ol style="line-height: 2.5;">
+                <li>The regulatory team (prepare) <input type="text" class="gap-fill-input" id="q1" placeholder="..."> the common technical document for submission.</li>
+                <li>Study participants (receive) <input type="text" class="gap-fill-input" id="q2" placeholder="..."> detailed information about the study before enrollment.</li>
+                <li>The investigator (measure) <input type="text" class="gap-fill-input" id="q3" placeholder="..."> subjects’ vital signs regularly.</li>
+                <li>The sponsor (do) <input type="text" class="gap-fill-input" id="q4" placeholder="..."> a routine audit at the end of each trial phase.</li>
+                <li>Medical journals (publish) <input type="text" class="gap-fill-input" id="q5" placeholder="..."> the final trial findings once a year.</li>
+            </ol>
+            <button type="button" class="btn-primary" onclick="checkAnswers()">Verify System Inputs</button>
+            <div id="feedback-message" style="margin-top: 15px; font-weight: bold;"></div>
+        </form>
+    </div>
+
+    <!-- ADJUSTED 3-STUDENT SCENARIO PRACTICE (UPDATED TOPICS) -->
+    <h2>6. Facilitating Practice: 3-Student Classroom Rotation</h2>
+    <div class="content-card accent-strip-red">
+        <p><strong>Instructions:</strong> To accommodate a class size of three, execute the following three scenarios sequentially. This rotation ensures that **every student takes a turn running a high-stakes meeting as the lead facilitator** while using the target language patterns.</p>
+        
+        <!-- SCENARIO 1 -->
+        <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">🔄 Rotation 1: Options for This Year’s Offsite Meeting</h3>
+        <p>The team needs to decide on a location and primary focus for the upcoming annual offsite meeting.</p>
+        <div class="grid-3-student">
+            <div class="student-card facilitator">
+                <strong>👤 Student 1: Facilitator</strong><br>
+                <small>State the meeting's objective, ask for input from both participants, summarize their suggestions, and assign action items.</small>
+            </div>
+            <div class="student-card">
+                <strong>👤 Student 2: Participant A</strong><br>
+                <small>Suggest a rural retreat focused on team-building activities and relaxation to reduce burnout.</small>
+            </div>
+            <div class="student-card">
+                <strong>👤 Student 3: Participant B</strong><br>
+                <small>Argue for a local conference center focused on strategic planning due to budget and travel constraints.</small>
+            </div>
+        </div>
+
+        <!-- SCENARIO 2 -->
+        <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-top: 30px;">🔄 Rotation 2: Ideas to Improve Dev. Ops in 2026</h3>
+        <p>The operations team is brainstorming how to streamline their deployment pipelines and technology stack for the new year.</p>
+        <div class="grid-3-student">
+            <div class="student-card">
+                <strong>👤 Student 1: Participant A</strong><br>
+                <small>Propose investing heavily in new automated security testing tools before every deployment.</small>
+            </div>
+            <div class="student-card facilitator">
+                <strong>👤 Student 2: Facilitator</strong><br>
+                <small>Open the discussion, ensure everyone gets a chance to speak, clarify technical points, and keep the meeting moving on.</small>
+            </div>
+            <div class="student-card">
+                <strong>👤 Student 3: Participant B</strong><br>
+                <small>Suggest migrating to a completely new cloud infrastructure provider to reduce long-term server costs.</small>
+            </div>
+        </div>
+
+        <!-- SCENARIO 3 -->
+        <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-top: 30px;">🔄 Rotation 3: Using AI</h3>
+        <p>The department is evaluating how to safely and effectively integrate Artificial Intelligence into their daily workflows.</p>
+        <div class="grid-3-student">
+            <div class="student-card">
+                <strong>👤 Student 1: Participant A</strong><br>
+                <small>Advocate for using AI immediately to automatically draft routine reports and external email responses.</small>
+            </div>
+            <div class="student-card">
+                <strong>👤 Student 2: Participant B</strong><br>
+                <small>Express strong concerns regarding data privacy, security, and the accuracy of AI-generated content.</small>
+            </div>
+            <div class="student-card facilitator">
+                <strong>👤 Student 3: Facilitator</strong><br>
+                <small>State the objective, ask for input, clarify concerns, summarize both perspectives, and define the next steps.</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERIFICATION & INTERACTION SCRIPTS -->
+    <script>
+        // --- 1. POPUP VOCABULARY LOGIC ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const popup = document.getElementById('vocab-popup');
+            const vocabElements = document.querySelectorAll('.dialogue-vocab');
+
+            // Show popup on click
+            vocabElements.forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent document click from immediately hiding it
+                    const definition = el.getAttribute('data-def');
+                    popup.innerHTML = `<strong>${el.innerText}</strong>: <br>${definition}`;
+                    
+                    // Position the popup slightly below and to the right of the cursor
+                    popup.style.display = 'block';
+                    popup.style.left = e.pageX + 10 + 'px';
+                    popup.style.top = e.pageY + 15 + 'px';
+                });
+            });
+
+            // Hide popup when clicking anywhere else
+            document.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+        });
+
+        // --- 2. GRAMMAR VERIFICATION LOGIC ---
+        function checkAnswers() {
+            const answers = {
+                'q1': 'prepares',
+                'q2': 'receive',
+                'q3': 'measures',
+                'q4': 'does',
+                'q5': 'publish'
+            };
+
+            let score = 0;
+            let total = Object.keys(answers).length;
+
+            for (let id in answers) {
+                let el = document.getElementById(id);
+                let val = el.value.trim().toLowerCase();
+                el.classList.remove('correct', 'incorrect');
+
+                if (val === answers[id]) {
+                    el.classList.add('correct');
+                    score++;
+                } else {
+                    el.classList.add('incorrect');
+                }
+            }
+
+            let msg = document.getElementById('feedback-message');
+            if (score === total) {
+                msg.style.color = '#10b981';
+                msg.innerText = "System Check Complete: All conjugates match the target metrics.";
+            } else {
+                msg.style.color = '#ef4444';
+                msg.innerText = `Verification Failed: Correctly parsed ${score} / ${total} fields. Check values and retry.`;
+            }
+        }
+
+        // --- 3. AUTO-SAVE PRODUCTION ANSWERS ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const textAreas = document.querySelectorAll('.warmup-input');
+
+            // Load any previously saved answers from the browser's memory
+            textAreas.forEach(box => {
+                const savedData = localStorage.getItem(box.id);
+                if (savedData) {
+                    box.value = savedData;
+                }
+
+                // Listen for typing and save the text instantly as they type
+                box.addEventListener('input', () => {
+                    localStorage.setItem(box.id, box.value);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
