@@ -287,10 +287,10 @@
     <p class="subtitle">Experiential Learning Framework · Present Simple Tense</p>
 
     <!-- ARTWORK PLACEHOLDER -->
-    <div class="artwork-placeholder">
+<div class="artwork-placeholder">
     <img src="images/dev-ops-2026-unit1.png"
          alt="Executive corporate meeting illustration"
-         style="width:900px; height:220px; object-fit:cover;">
+         style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
 </div>
 
     <!-- MAIN SKILL FOCUS (UPDATED FROM image_6441b5.png) -->
