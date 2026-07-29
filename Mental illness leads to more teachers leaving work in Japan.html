@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N3 Article – Teachers Leaving Work Due to Mental Illness</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", MeiRyo, sans-serif;
+      line-height: 1.9;
+      color: #2c3e50;
+      background-color: #f8fafc;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px 120px 20px;
+    }
+    h1 {
+      font-size: 22px;
+      color: #1a365d;
+      border-bottom: 3px solid #3182ce;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .instruction {
+      font-size: 14px;
+      color: #4a5568;
+      background-color: #ebf8ff;
+      border-left: 4px solid #3182ce;
+      padding: 10px 14px;
+      margin-bottom: 24px;
+      border-radius: 0 4px 4px 0;
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      background: #ffffff;
+      padding: 18px 22px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+    .word {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background-color: #edf2f7;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .word:hover {
+      background-color: #3182ce;
+      color: #ffffff;
+    }
+    #popup {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 320px;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-size: 14px;
+      z-index: 1000;
+    }
+    #popup-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #2b6cb0;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    #popup-kana {
+      color: #4a5568;
+      margin-bottom: 4px;
+    }
+    #popup-meaning {
+      color: #2d3748;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>精神的な負担で退職する教員が過去最多に</h1>
+
+  <div class="instruction">
+    💡 <strong>使い方 (How to use):</strong> 単語をクリックすると、下のボックスに「読み方（かな）」と「意味（英語）」が表示されます。
+  </div>
+
+  <p>
+    <span class="word" data-kana="にほん" data-meaning="Japan">日本</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="もんぶかがくしょう" data-meaning="Ministry of Education (MEXT)">文部科学省</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="ちょうさ" data-meaning="survey; investigation">調査</span>
+    <span class="word" data-kana="によると" data-meaning="according to">によると</span>、2024
+    <span class="word" data-kana="ねんど" data-meaning="fiscal year">年度</span>
+    <span class="word" data-kana="に" data-meaning="in; at">に</span>
+    <span class="word" data-kana="こころ" data-meaning="mind; heart">心</span>
+    <span class="word" data-kana="の" data-meaning="of">の</span>
+    <span class="word" data-kana="ふちょう" data-meaning="illness; bad condition">不調</span>
+    <span class="word" data-kana="を" data-meaning="object particle">を</span>
+    <span class="word" data-kana="りゆう" data-meaning="reason">理由</span>
+    <span class="word" data-kana="に" data-meaning="as / for">に</span>
+    <span class="word" data-kana="たいしょく" data-meaning="resignation; leaving work">退職</span>
+    <span class="word" data-kana="した" data-meaning="did / who did">した</span>
+    <span class="word" data-kana="こうりつ" data-meaning="public">公立</span>
+    <span class="word" data-kana="がっこう" data-meaning="school">学校</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="きょういん" data-meaning="teacher; educator">教員</span>
+    <span class="word" data-kana="は" data-meaning="topic particle">は</span> 1,319
+    <span class="word" data-kana="にん" data-meaning="counter for people">人</span>
+    <span class="word" data-kana="で" data-meaning="and (connecting form)">で</span>、
+    <span class="word" data-kana="かこさいた" data-meaning="record high">過去最多</span>
+    <span class="word" data-kana="に" data-meaning="to become (target particle)">に</span>
+    <span class="word" data-kana="なりました" data-meaning="became">なりました</span>。
+    <span class="word" data-kana="この" data-meaning="this">この</span>
+    <span class="word" data-kana="かず" data-meaning="number; count">数</span>
+    <span class="word" data-kana="は" data-meaning="topic particle">は</span>、
+    <span class="word" data-kana="ぜんかい" data-meaning="previous time">前回</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="ちょうさ" data-meaning="survey">調査</span>
+    <span class="word" data-kana="と" data-meaning="with; compared to">と</span>
+    <span class="word" data-kana="くらべて" data-meaning="compared to">比べて</span>
+    <span class="word" data-kana="やく" data-meaning="about; approximately">約</span>39
+    <span class="word" data-kana="パーセント" data-meaning="percent">％</span>
+    <span class="word" data-kana="ふえています" data-meaning="has increased / is increasing">増えています</span>。
+    <span class="word" data-kana="きょういん" data-meaning="teacher; educator">教員</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="せいしんてき" data-meaning="mental; psychological">精神的</span>
+    <span class="word" data-kana="な" data-meaning="adjectival particle">な</span>
+    <span class="word" data-kana="ふたん" data-meaning="burden; strain">負担</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="おおきく" data-meaning="large; big">大きく</span>
+    <span class="word" data-kana="なっている" data-meaning="is becoming">なっている</span>
+    <span class="word" data-kana="こと" data-meaning="fact; thing">こと</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>、
+    <span class="word" data-kana="あらためて" data-meaning="once again; anew">改めて</span>
+    <span class="word" data-kana="あきらかに" data-meaning="clear; obvious">明らかに</span>
+    <span class="word" data-kana="なりました" data-meaning="became">なりました</span>。
+  </p>
+
+  <p>
+    <span class="word" data-kana="このような" data-meaning="this kind of">このような</span>
+    <span class="word" data-kana="ぞうか" data-meaning="increase">増加</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="はいけい" data-meaning="background; context">背景</span>
+    <span class="word" data-kana="には" data-meaning="in; behind">には</span>、
+    <span class="word" data-kana="とくべつ" data-meaning="special">特別</span>
+    <span class="word" data-kana="な" data-meaning="adjectival particle">な</span>
+    <span class="word" data-kana="しえん" data-meaning="support; assistance">支援</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="ひつよう" data-meaning="necessary">必要</span>
+    <span class="word" data-kana="な" data-meaning="adjectival particle">な</span>
+    <span class="word" data-kana="がくせい" data-meaning="student(s)">学生</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="ふえている" data-meaning="is increasing">増えている</span>
+    <span class="word" data-kana="こと" data-meaning="fact; thing">こと</span>
+    <span class="word" data-kana="や" data-meaning="and (listing items)">や</span>、
+    <span class="word" data-kana="まんせいてき" data-meaning="chronic; long-lasting">慢性的な</span>
+    <span class="word" data-kana="きょういんぶそく" data-meaning="teacher shortage">教員不足</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="あります" data-meaning="there is; exists">あります</span>。
+    <span class="word" data-kana="がっこうげんば" data-meaning="school site / environment">学校現場</span>
+    <span class="word" data-kana="では" data-meaning="in; at">では</span>、
+    <span class="word" data-kana="ひとり" data-meaning="one person">一人</span>
+    <span class="word" data-kana="の" data-meaning="possessive particle (of)">の</span>
+    <span class="word" data-kana="きょういん" data-meaning="teacher">教員</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="たんとうする" data-meaning="to be in charge of">担当する</span>
+    <span class="word" data-kana="ぎょうむ" data-meaning="work duties">業務</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="ふえ" data-meaning="increase (and...)">増え</span>、
+    <span class="word" data-kana="ちょうじかんろうどう" data-meaning="long working hours">長時間労働</span>
+    <span class="word" data-kana="や" data-meaning="and">や</span>
+    <span class="word" data-kana="ストレス" data-meaning="stress">ストレス</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="おおきな" data-meaning="big; major">大きな</span>
+    <span class="word" data-kana="もんだい" data-meaning="problem; issue">問題</span>
+    <span class="word" data-kana="に" data-meaning="into (result particle)">に</span>
+    <span class="word" data-kana="なっています" data-meaning="has become / is becoming">なっています</span>。
+  </p>
+
+  <p>
+    <span class="word" data-kana="もんぶかがくしょう" data-meaning="Ministry of Education (MEXT)">文部科学省</span>
+    <span class="word" data-kana="は" data-meaning="topic particle">は</span>、
+    <span class="word" data-kana="きょういん" data-meaning="teacher">教員</span>
+    <span class="word" data-kana="が" data-meaning="subject particle">が</span>
+    <span class="word" data-kana="しんこく" data-meaning="serious; severe">深刻</span>
+    <span class="word" data-kana="な" data-meaning="adjectival particle">な</span>
+    <span class="word" data-kana="じょうたい" data-meaning="condition; state">状態</span>
+    <span class="word" data-kana="に" data-meaning="into; to">に</span>
+    <span class="word" data-kana="なる" data-meaning="to become">なる</span>
+    <span class="word" data-kana="まえ" data-meaning="before">前</span>
+    <span class="word" data-kana="に" data-meaning="at; in">に</span>
+    <span class="word" data-kana="はっけん" data-meaning="discovery; detection">発見</span>
+    <span class="word" data-kana="できる" data-meaning="can do / able to">できる</span>
+    <span class="word" data-kana="よう" data-meaning="so that; in order to">よう</span>、
+    <span class="word" data-kana="ストレスチェック" data-meaning="stress check">ストレスチェック</span>
+    <span class="word" data-kana="を" data-meaning="object particle">を</span>
+    <span class="word" data-kana="おこなったり" data-meaning="doing (things like)">行ったり</span>、
+    <span class="word" data-kana="そうだん" data-meaning="consultation; advice">相談</span>
+    <span class="word" data-kana="できる" data-meaning="can do / able to">できる</span>
+    <span class="word" data-kana="ばしょ" data-meaning="place">場所</span>
+    <span class="word" data-kana="を" data-meaning="object particle">を</span>
+    <span class="word" data-kana="ふやしたり" data-meaning="increasing (things like)">増やしたり</span>
+    <span class="word" data-kana="して" data-meaning="doing so and...">して</span>、
+    <span class="word" data-kana="はたらきやすい" data-meaning="easy to work in">働きやすい</span>
+    <span class="word" data-kana="かんきょうづくり" data-meaning="environment building">環境づくり</span>
+    <span class="word" data-kana="を" data-meaning="object particle">を</span>
+    <span class="word" data-kana="すすめる" data-meaning="to promote; advance">進める</span>
+    <span class="word" data-kana="ほうしん" data-meaning="policy; plan">方針</span>
+    <span class="word" data-kana="です" data-meaning="is / to be">です</span>。
+  </p>
+
+  <div id="popup">
+    <div id="popup-title">クリックした単語</div>
+    <div id="popup-kana">かな：</div>
+    <div id="popup-meaning">意味：</div>
+  </div>
+
+  <script>
+    const popupTitle = document.getElementById('popup-title');
+    const popupKana = document.getElementById('popup-kana');
+    const popupMeaning = document.getElementById('popup-meaning');
+
+    document.querySelectorAll('.word').forEach(el => {
+      el.addEventListener('click', () => {
+        const text = el.textContent;
+        const kana = el.getAttribute('data-kana');
+        const meaning = el.getAttribute('data-meaning');
+
+        popupTitle.textContent = text;
+        popupKana.textContent = 'かな：' + kana;
+        popupMeaning.textContent = '意味：' + meaning;
+      });
+    });
+  </script>
+
+</body>
+</html>
