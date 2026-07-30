@@ -88,6 +88,7 @@
             background-color: #e2e8f0;
             border: 2px dashed #cbd5e1;
             border-radius: 8px;
+            width: 100%;
             height: 220px;
             display: flex;
             align-items: center;
@@ -96,6 +97,7 @@
             color: #64748b;
             font-weight: bold;
             text-align: center;
+            box-sizing: border-box;
         }
 
         /* AUDIO SYSTEM */
@@ -123,7 +125,7 @@
             border-radius: 6px;
             padding: 14px;
             margin-bottom: 12px;
-            transition: all 0.2s ease-index;
+            transition: all 0.2s ease;
         }
 
         details.vocab-card[open] {
@@ -278,9 +280,9 @@
     <div class="brand-nav">
         <!-- Logo Image Spot -->
         <div class="logo-container">
-            <img src="logo.png" alt="Impact Training Services Logo" class="brand-logo-img">
+            <img src="images/logo.png" alt="Impact Training Services Logo" class="brand-logo-img">
         </div>
-        <div><a href="index.html" style="color: var(--primary-dark); text-decoration: none; font-weight: bold;">← Back to Course Index</a></div>
+        <div><a href="../index.html" style="color: var(--primary-dark); text-decoration: none; font-weight: bold;">← Back to Course Index</a></div>
     </div>
 
     <h1>Unit 1: Facilitating Meetings</h1>
@@ -288,10 +290,12 @@
 
     <!-- ARTWORK PLACEHOLDER -->
     <div class="artwork-placeholder">
-        <span>🖼️ [ Artwork Placeholder: Insert Executive Corporate Meeting Illustration Here ] <br> <small>(Dimensions Optimized for 900x220px)</small></span>
+        <img src="images/dev-ops-2026-unit1.png"
+             alt="Executive corporate meeting illustration"
+             style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
     </div>
 
-    <!-- MAIN SKILL FOCUS (UPDATED FROM image_6441b5.png) -->
+    <!-- MAIN SKILL FOCUS -->
     <h2>1. Core Skill: Facilitating Meetings</h2>
     <div class="content-card accent-strip-red">
         <h3>KEY POINTS</h3>
@@ -439,7 +443,7 @@
         </form>
     </div>
 
-    <!-- ADJUSTED 3-STUDENT SCENARIO PRACTICE (UPDATED TOPICS) -->
+    <!-- 3-STUDENT SCENARIO PRACTICE -->
     <h2>6. Facilitating Practice: 3-Student Classroom Rotation</h2>
     <div class="content-card accent-strip-red">
         <p><strong>Instructions:</strong> To accommodate a class size of three, execute the following three scenarios sequentially. This rotation ensures that **every student takes a turn running a high-stakes meeting as the lead facilitator** while using the target language patterns.</p>
@@ -501,32 +505,44 @@
 
     <!-- VERIFICATION & INTERACTION SCRIPTS -->
     <script>
-        // --- 1. POPUP VOCABULARY LOGIC ---
         document.addEventListener("DOMContentLoaded", () => {
+            // --- 1. POPUP VOCABULARY LOGIC ---
             const popup = document.getElementById('vocab-popup');
             const vocabElements = document.querySelectorAll('.dialogue-vocab');
 
-            // Show popup on click
             vocabElements.forEach(el => {
                 el.addEventListener('click', (e) => {
                     e.stopPropagation(); // Prevent document click from immediately hiding it
                     const definition = el.getAttribute('data-def');
                     popup.innerHTML = `<strong>${el.innerText}</strong>: <br>${definition}`;
                     
-                    // Position the popup slightly below and to the right of the cursor
+                    // Position popup slightly below and right of cursor
                     popup.style.display = 'block';
                     popup.style.left = e.pageX + 10 + 'px';
                     popup.style.top = e.pageY + 15 + 'px';
                 });
             });
 
-            // Hide popup when clicking anywhere else
+            // Hide popup on outside click
             document.addEventListener('click', () => {
                 popup.style.display = 'none';
             });
+
+            // --- 2. AUTO-SAVE PRODUCTION ANSWERS ---
+            const textAreas = document.querySelectorAll('.warmup-input');
+            textAreas.forEach(box => {
+                const savedData = localStorage.getItem(box.id);
+                if (savedData) {
+                    box.value = savedData;
+                }
+
+                box.addEventListener('input', () => {
+                    localStorage.setItem(box.id, box.value);
+                });
+            });
         });
 
-        // --- 2. GRAMMAR VERIFICATION LOGIC ---
+        // --- 3. GRAMMAR VERIFICATION LOGIC ---
         function checkAnswers() {
             const answers = {
                 'q1': 'prepares',
@@ -561,24 +577,6 @@
                 msg.innerText = `Verification Failed: Correctly parsed ${score} / ${total} fields. Check values and retry.`;
             }
         }
-
-        // --- 3. AUTO-SAVE PRODUCTION ANSWERS ---
-        document.addEventListener("DOMContentLoaded", () => {
-            const textAreas = document.querySelectorAll('.warmup-input');
-
-            // Load any previously saved answers from the browser's memory
-            textAreas.forEach(box => {
-                const savedData = localStorage.getItem(box.id);
-                if (savedData) {
-                    box.value = savedData;
-                }
-
-                // Listen for typing and save the text instantly as they type
-                box.addEventListener('input', () => {
-                    localStorage.setItem(box.id, box.value);
-                });
-            });
-        });
     </script>
 </body>
 </html>
