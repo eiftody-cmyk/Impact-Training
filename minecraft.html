@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft English Survival Adventure</title>
+  <style>
+    body {
+      font-family: "Courier New", Courier, monospace, sans-serif;
+      background-color: #1e272c;
+      color: #f1f2f6;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 24px;
+      background: #2ed573;
+      color: #2f3542;
+      border-bottom: 6px solid #26af5f;
+    }
+    h1 { margin: 0; font-size: 2.2rem; font-weight: bold; }
+    h2 { margin-top: 0; color: #2ed573; }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #2f3542;
+      border-radius: 8px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 16px;
+      background: #353b48;
+      border: 3px solid #747d8c;
+      border-radius: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .badge-vocab { background: #e1b12c; color: #000; }
+    .badge-craft { background: #44bd32; }
+    .badge-dialogue { background: #00a8ff; }
+    .badge-game { background: #e84118; }
+
+    .grid-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .card {
+      flex: 1 1 180px;
+      background: #2f3542;
+      border-radius: 6px;
+      padding: 12px;
+      border: 2px solid #718093;
+    }
+
+    .dialogue {
+      background: #1e272c;
+      border-radius: 6px;
+      padding: 12px 18px;
+      border-left: 5px solid #00a8ff;
+    }
+
+    .button-row {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #fff;
+      background: #44bd32;
+      border-bottom: 4px solid #2ed573;
+      transition: 0.1s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      background: #2ed573;
+    }
+
+    .message-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 4px;
+      background: #1e272c;
+      border: 2px solid #fbc531;
+      color: #fbc531;
+      min-height: 40px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      border-radius: 4px;
+      border: 2px solid #00a8ff;
+      background: #1e272c;
+      color: #fff;
+      padding: 10px;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #a4b0be;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>MINECRAFT ENGLISH ADVENTURE</h1>
+  <p>Learn Crafting, Survival, and Building in English!</p>
+</header>
+
+<div class="container">
+
+  <!-- Vocabulary Section -->
+  <section class="section">
+    <span class="badge badge-vocab">Vocabulary</span>
+    <h2>Essential Survival Words / 基本の英単語</h2>
+    <ul>
+      <li><strong>Mine</strong> — 掘る (ほる)</li>
+      <li><strong>Craft</strong> — 作る・クラフトする</li>
+      <li><strong>Build</strong> — 建設する (けんせつする)</li>
+      <li><strong>Explore</strong> — 探検する (たんけんする)</li>
+      <li><strong>Shelter</strong> — 隠れ家・家 (かくれが)</li>
+      <li><strong>Equipment</strong> — 装備・道具 (そうび)</li>
+      <li><strong>Trade</strong> — 交易する・取引する</li>
+    </ul>
+  </section>
+
+  <!-- Items & Blocks -->
+  <section class="section">
+    <span class="badge badge-vocab">Materials</span>
+    <h2>Blocks & Items / ブロックとアイテム</h2>
+    <div class="grid-list">
+      <div class="card"><h3>Wood / 木材</h3><p>Basic building material</p></div>
+      <div class="card"><h3>Cobblestone / 丸石</h3><p>Strong building material</p></div>
+      <div class="card"><h3>Iron Ore / 鉄鉱石</h3><p>Used for tough armor</p></div>
+      <div class="card"><h3>Diamond / ダイヤモンド</h3><p>Rare and powerful!</p></div>
+    </div>
+  </section>
+
+  <!-- Crafting Recipes -->
+  <section class="section">
+    <span class="badge badge-craft">Crafting</span>
+    <h2>Crafting Sentences / クラフト文法</h2>
+    <div class="button-row">
+      <button onclick="showCraft('To craft a Pickaxe, I need 3 Cobblestones and 2 Sticks! ⛏️')">Pickaxe Recipe</button>
+      <button onclick="showCraft('To craft a Bed, I need 3 Wool blocks and 3 Wooden Planks! 🛏️')">Bed Recipe</button>
+      <button onclick="showCraft('To craft a Torch, I need 1 Coal and 1 Stick! 🕯️')">Torch Recipe</button>
+      <button onclick="showCraft('To craft a Sword, I need 2 Diamonds and 1 Stick! ⚔️')">Diamond Sword Recipe</button>
+    </div>
+    <div id="craftBox" class="message-box">Click a button to reveal the recipe! / ボタンを押してね。</div>
+  </section>
+
+  <!-- Survival Dialogue -->
+  <section class="section">
+    <span class="badge badge-dialogue">Dialogue</span>
+    <h2>Night Survival Dialogue / 夜のサバイバル会話</h2>
+    <div class="dialogue">
+      <p><strong>Player A:</strong> Look! The sun is setting. Night is coming!<br>見て！日があっ暮れてきた。夜が来るよ！</p>
+      <p><strong>Player B:</strong> What should we do?</p>
+      <p><strong>Player A:</strong> We need to build a shelter quickly!</p>
+      <p><strong>Player B:</strong> I have 20 cobblestones. Let's make a door!</p>
+      <p><strong>Player A:</strong> Watch out! A Creeper is behind you! / 気をつけて！うしろにクリーパーがいる！</p>
+    </div>
+  </section>
+
+  <!-- Action Commands -->
+  <section class="section">
+    <span class="badge badge-game">Action Game</span>
+    <h2>Emergency Action Commands / 緊急コマンドゲーム</h2>
+    <p>Read the action out loud and move!</p>
+    <div class="button-row">
+      <button onclick="randomAction()">Get Action Command</button>
+    </div>
+    <div id="actionBox" class="message-box">Press the button! / ボタンを押してね。</div>
+  </section>
+
+  <!-- Mob Guessing Riddle -->
+  <section class="section">
+    <span class="badge badge-game">Mob Riddle</span>
+    <h2>Guess the Minecraft Mob / モンスターなぞなぞ</h2>
+    <div id="riddleBox" class="message-box">Press the button for a riddle! / ボタンを押してね。</div>
+    <div id="riddleAnswer" class="message-box" style="display:none; color: #2ed573;"></div>
+    <div class="button-row">
+      <button onclick="newRiddle()">New Mob Riddle</button>
+      <button onclick="showAnswer()">Show Answer</button>
+    </div>
+  </section>
+
+  <!-- Base Designer -->
+  <section class="section">
+    <span class="badge badge-craft">Build</span>
+    <h2>Design Your Secret Base / 秘密基地を作ろう</h2>
+    <textarea id="baseText" placeholder="My Base Name: ...&#10;Location: (Underground / On a mountain / Underwater)&#10;Blocks used: ...&#10;Special Feature: (Secret trapdoor / Farm / Waterfall)"></textarea>
+    <div class="button-row">
+      <button onclick="submitBase()">Check My Base</button>
+    </div>
+    <div id="baseBox" class="message-box">Describe your secret base above! / 秘密基地について書いてね。</div>
+  </section>
+
+  <p class="footer-note">Minecraft English Adventure • Fun English Lessons for Young Builders</p>
+
+</div>
+
+<script>
+  function showCraft(text) {
+    document.getElementById("craftBox").textContent = text;
+  }
+
+  function randomAction() {
+    const actions = [
+      "A Creeper is close! Jump backward and run! — クリーパーだ！うしろにジャンプして逃げて！",
+      "Night time! Place a bed and sleep! — 夜だ！ベッドを置いて寝て！",
+      "You found Diamonds! Mine fast! — ダイヤ発見！すばやく掘って！",
+      "A Skeleton is shooting arrows! Block with your shield! — スケルトンが矢を射ってきた！盾でガードして！",
+      "You fell in water! Swim up! — 水に落ちた！上に泳いで！"
+    ];
+    document.getElementById("actionBox").textContent =
+      actions[Math.floor(Math.random() * actions.length)];
+  }
+
+  /* Riddles */
+  let currentAnswer = "";
+
+  function newRiddle() {
+    const riddles = [
+      ["I am green, I am silent, and I explode when I get close to you! Who am I?", "Creeper / クリーパー"],
+      ["I am tall, black, have purple eyes, and I pick up blocks. Don't look at my eyes!", "Enderman / エンダーマン"],
+      ["I wear iron armor, walk slowly at night, and burn in the morning sun. Who am I?", "Zombie / ゾンビ"],
+      ["I live in villages, have a big nose, and love to trade emeralds. Who am I?", "Villager / 村人"],
+      ["I fly in the End dimension, shoot purple fire, and am the final boss! Who am I?", "Ender Dragon / エンダードラゴン"]
+    ];
+    const pick = riddles[Math.floor(Math.random() * riddles.length)];
+    document.getElementById("riddleBox").textContent = pick[0];
+    currentAnswer = pick[1];
+    document.getElementById("riddleAnswer").style.display = "none";
+  }
+
+  function showAnswer() {
+    if (!currentAnswer) return;
+    const box = document.getElementById("riddleAnswer");
+    box.textContent = "Answer: " + currentAnswer;
+    box.style.display = "block";
+  }
+
+  function submitBase() {
+    const text = document.getElementById("baseText").value.trim();
+    const box = document.getElementById("baseBox");
+    if (!text) {
+      box.textContent = "Please write a few words about your secret base first!";
+      return;
+    }
+    const compliments = [
+      "Awesome build, Builder! That sounds like an impenetrable fortress!",
+      "Great English! I would love to explore your secret base!",
+      "Fantastic design! Your choice of location and blocks is very creative!",
+      "Ready for survival! No mob can break into a base like that!"
+    ];
+    box.textContent = compliments[Math.floor(Math.random() * compliments.length)];
+  }
+</script>
+
+</body>
+</html>
