@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <title>Minecraft English Survival Adventure</title>
   <style>
     body {
@@ -384,11 +387,17 @@
   /* ---------- Text-to-Speech ---------- */
   let voices = [];
   function loadVoices() { voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }
-  if ("speechSynthesis" in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+  if ("speechSynthesis" in window) {
+    loadVoices();
+    if (typeof speechSynthesis.onvoiceschanged !== "undefined") {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }
 
   function pickEnglishVoice() {
-    return voices.find(v => v.lang === "en-US")
-        || voices.find(v => v.lang && v.lang.indexOf("en") === 0)
+    if (!voices.length) loadVoices();
+    return voices.find(function (v) { return v.lang === "en-US"; })
+        || voices.find(function (v) { return v.lang && v.lang.indexOf("en") === 0; })
         || null;
   }
 
@@ -398,20 +407,31 @@
     u.rate = 0.9;
     const v = pickEnglishVoice();
     if (v) u.voice = v;
-    u.onerror = function () {};
+    u.onerror = function (ev) { console.warn("TTS error:", ev && ev.error ? ev.error : ev); };
     return u;
   }
 
+  /* Chrome/Safari quirk fix: cancel() then immediate speak() can be dropped.
+     Small delay + resume() makes playback reliable on Mac and iPad. */
   function speak(text) {
     if (!text || !("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(makeUtterance(text));
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    setTimeout(function () {
+      synth.resume();
+      synth.speak(makeUtterance(text));
+    }, 60);
   }
 
+  /* Single utterance is more reliable across browsers than a long queue. */
   function speakSequence(lines) {
-    if (!("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
-    lines.forEach(function (line) { speechSynthesis.speak(makeUtterance(line)); });
+    speak(lines.join("\n\n"));
+  }
+
+  if (!("speechSynthesis" in window)) {
+    document.querySelectorAll(".speak-btn").forEach(function (b) { b.style.display = "none"; });
+    const pl = document.getElementById("popup-listen");
+    if (pl) pl.style.display = "none";
   }
 
   function stripHtml(html) {
@@ -421,7 +441,11 @@
   }
 
   /* ---------- Message boxes remember their English text for listening ---------- */
-  const boxSay = {};
+  const boxSay = {
+    craftBox: "Click a recipe button to reveal the recipe!",
+    actionBox: "Press the button to get an emergency command!",
+    riddleBox: "Press the button for a riddle!"
+  };
 
   function setBox(id, html, sayText) {
     document.getElementById(id).innerHTML = html;
