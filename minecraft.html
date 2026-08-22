@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Minecraft English Survival Adventure</title>
   <style>
     body {
@@ -10,6 +11,7 @@
       color: #f1f2f6;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     header {
       text-align: center;
@@ -85,6 +87,7 @@
       border: none;
       border-radius: 4px;
       padding: 10px 18px;
+      min-height: 44px;
       font-family: inherit;
       font-size: 0.95rem;
       font-weight: bold;
@@ -92,10 +95,24 @@
       background: #44bd32;
       border-bottom: 4px solid #2ed573;
       transition: 0.1s ease;
+      touch-action: manipulation;
     }
     button:hover {
       transform: translateY(-2px);
       background: #2ed573;
+    }
+    button:active {
+      transform: scale(0.97);
+      filter: brightness(0.9);
+    }
+
+    .speak-btn {
+      background: #00a8ff;
+      border-bottom-color: #0074d9;
+      font-size: 0.9rem;
+    }
+    .speak-btn:hover {
+      background: #48aef2;
     }
 
     .message-box {
@@ -121,6 +138,12 @@
       box-sizing: border-box;
     }
 
+    .score-box {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #fbc531;
+    }
+
     .footer-note {
       text-align: center;
       font-size: 0.85rem;
@@ -139,20 +162,34 @@
       background-color: #2ed573;
       color: #2f3542;
     }
+    .word.active {
+      background: #2ed573;
+      color: #2f3542;
+      font-weight: bold;
+    }
 
+    /* Bottom-sheet popup (iPad friendly) */
     #popup {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      width: 340px;
-      max-width: calc(100vw - 40px);
-      padding: 12px 16px;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%) translateY(30px);
+      width: min(480px, calc(100vw - 32px));
+      padding: 14px 40px 14px 16px;
       border: 2px solid #2ed573;
-      border-radius: 8px;
+      border-radius: 12px;
       background: #2f3542;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.65);
       font-size: 14px;
       z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+    #popup.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
     }
     #popup-title {
       font-size: 16px;
@@ -165,6 +202,33 @@
     #popup-meaning {
       color: #f1f2f6;
       font-weight: 500;
+    }
+    #popup-listen {
+      margin-top: 10px;
+      background: #00a8ff;
+      border-bottom-color: #0074d9;
+      font-size: 0.85rem;
+      min-height: 38px;
+      padding: 6px 14px;
+    }
+    #popup-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      color: #a4b0be;
+      font-size: 18px;
+      line-height: 1;
+      min-height: 36px;
+      min-width: 36px;
+      padding: 4px;
+      box-shadow: none;
+    }
+    #popup-close:hover {
+      color: #fff;
+      background: none;
+      transform: none;
     }
 
     .header-word {
@@ -208,6 +272,12 @@
       <li><span class="word" data-meaning="当てる・当ててみる (あてる)">Guess</span></li>
       <li><span class="word" data-meaning="説明する (せつめいする)">Describe</span></li>
       <li><span class="word" data-meaning="えらぶ (選ぶ)">Choose</span></li>
+      <li><span class="word" data-meaning="つかまえる (捕まえる)">Catch</span></li>
+      <li><span class="word" data-meaning="あつめる (集める)">Collect</span></li>
+      <li><span class="word" data-meaning="たおす (倒す)">Defeat</span></li>
+      <li><span class="word" data-meaning="回復する・治す (かいふくする・なおす)">Heal</span></li>
+      <li><span class="word" data-meaning="飼い慣らす (かいならす)">Tame</span></li>
+      <li><span class="word" data-meaning="戦う・バトル (たたかう)">Battle</span></li>
     </ul>
   </section>
 
@@ -220,6 +290,7 @@
       <div class="card"><h3><span class="word" data-meaning="丸石 (まるいし)">Cobblestone</span> / 丸石</h3><p><span class="word" data-meaning="丈夫な (じょうぶな) 建設材料です">Strong building material</span></p></div>
       <div class="card"><h3><span class="word" data-meaning="鉄鉱石 (てっこうせき)">Iron Ore</span> / 鉄鉱石</h3><p><span class="word" data-meaning="強いよろいを作るのに使います">Used for tough armor</span></p></div>
       <div class="card"><h3><span class="word" data-meaning="ダイヤモンド">Diamond</span> / ダイヤモンド</h3><p><span class="word" data-meaning="めずらしくて最強 (さいきょう)！">Rare and powerful!</span></p></div>
+      <div class="card"><h3><span class="word" data-meaning="ポーション・魔法の薬">Potion</span> / ポーション</h3><p><span class="word" data-meaning="飲むと回復します！">Drink it to heal!</span> 🧪</p></div>
     </div>
   </section>
 
@@ -227,13 +298,11 @@
   <section class="section">
     <span class="badge badge-craft">Crafting</span>
     <h2>Crafting Sentences / クラフト文法</h2>
-    <div class="button-row">
-      <button onclick="showCraft('<span class=\'word\' data-meaning=\'ツルハシを作る\'>craft</span> a <span class=\'word\' data-meaning=\'ツルハシ\'>Pickaxe</span>, <span class=\'word\' data-meaning=\'わたしは必要とする\'>I need</span> 3 <span class=\'word\' data-meaning=\'丸石\'>Cobblestones</span> and 2 <span class=\'word\' data-meaning=\'棒\'>Sticks</span>! ⛏️')">Pickaxe Recipe</button>
-      <button onclick="showCraft('To craft a <span class=\'word\' data-meaning=\'ベッド\'>Bed</span>, I need 3 <span class=\'word\' data-meaning=\'羊毛\'>Wool</span> blocks and 3 <span class=\'word\' data-meaning=\'木の板\'>Wooden Planks</span>! 🛏️')">Bed Recipe</button>
-      <button onclick="showCraft('To craft a <span class=\'word\' data-meaning=\'松明\'>Torch</span>, I need 1 <span class=\'word\' data-meaning=\'石炭\'>Coal</span> and 1 <span class=\'word\' data-meaning=\'棒\'>Stick</span>! 🕯️')">Torch Recipe</button>
-      <button onclick="showCraft('To craft a <span class=\'word\' data-meaning=\'剣\'>Sword</span>, I need 2 <span class=\'word\' data-meaning=\'ダイヤモンド\'>Diamonds</span> and 1 <span class=\'word\' data-meaning=\'棒\'>Stick</span>! ⚔️')">Diamond Sword Recipe</button>
-    </div>
+    <div class="button-row" id="craftButtons"></div>
     <div id="craftBox" class="message-box"><span class="word" data-meaning="ボタンを押すとレシピが出るよ！">Click a button to reveal the recipe!</span> / ボタンを押してね。</div>
+    <div class="button-row">
+      <button class="speak-btn" onclick="speakBox('craftBox')">🔊 Listen to the recipe!</button>
+    </div>
   </section>
 
   <!-- Survival Dialogue -->
@@ -251,6 +320,11 @@
       <p><strong>Player B:</strong> <span class="word" data-meaning="ダイヤの剣で攻撃するんだ！">We'll attack it with our diamond sword!</span> <span class="word" data-meaning="でも攻撃より守るほうがうまいよ。">Protecting is better than attacking!</span></p>
       <p><strong>Player A:</strong> <span class="word" data-meaning="気をつけて！うしろにクリーパーがいる！">Watch out! A Creeper is behind you!</span></p>
       <p><strong>Player B:</strong> <span class="word" data-meaning="盾を上げて守って！">Raise your shield and protect yourself!</span></p>
+      <p><strong>Player A:</strong> <span class="word" data-meaning="夕ごはんに魚をつかまえよう！">Let's catch fish for dinner!</span><br>夕ごはんに魚をつかまえよう！</p>
+      <p><strong>Player B:</strong> <span class="word" data-meaning="いいね！あしたはオオカミを飼い慣らそう。">Good idea! Tomorrow let's tame a wolf!</span> <span class="word" data-meaning="まず骨を集める必要があるね。">First we need to collect bones!</span><br>いいね！あしたはオオカミを飼い慣らそう。まず骨をあつめる必要があるね。</p>
+    </div>
+    <div class="button-row">
+      <button class="speak-btn" onclick="speakDialogue()">🔊 Listen to the whole dialogue!</button>
     </div>
   </section>
 
@@ -263,6 +337,9 @@
       <button onclick="randomAction()">Get Action Command</button>
     </div>
     <div id="actionBox" class="message-box"><span class="word" data-meaning="ボタンを押してね！">Press the button!</span> / ボタンを押してね。</div>
+    <div class="button-row">
+      <button class="speak-btn" onclick="speakBox('actionBox')">🔊 Listen to the command!</button>
+    </div>
   </section>
 
   <!-- Mob Guessing Riddle -->
@@ -271,9 +348,12 @@
     <h2>Guess the Minecraft Mob / モンスターなぞなぞ</h2>
     <div id="riddleBox" class="message-box">Press the button for a riddle! / ボタンを押してね。</div>
     <div id="riddleAnswer" class="message-box" style="display:none; color: #2ed573;"></div>
+    <div id="riddleScore" class="score-box"></div>
     <div class="button-row">
       <button onclick="newRiddle()">New Mob Riddle</button>
-      <button onclick="showAnswer()">Show Answer</button>
+      <button onclick="gotIt()">I got it! 🎉</button>
+      <button onclick="showAnswer()">Show Answer 👀</button>
+      <button class="speak-btn" onclick="speakBox('riddleBox')">🔊 Read the riddle!</button>
     </div>
   </section>
 
@@ -282,7 +362,7 @@
     <span class="badge badge-craft">Build</span>
     <h2>Design Your Secret Base / 秘密基地を作ろう</h2>
     <p><span class="word" data-meaning="自分の基地を説明してください。">Describe your base.</span> <span class="word" data-meaning="それには何が必要？">What do you need to build it?</span> <span class="word" data-meaning="良い場所を選んで、">Choose a good location,</span> <span class="word" data-meaning="そして守り方を教えてね！">and tell us how you will protect it!</span></p>
-    <textarea id="baseText" placeholder="My Base Name: ...&#10;Location: (Underground / On a mountain / Underwater)&#10;Blocks I need: (Wood, Cobblestone, Diamond...)&#10;I choose this spot because: ...&#10;Special Feature: (Secret trapdoor / Farm / Waterfall)"></textarea>
+    <textarea id="baseText" placeholder="My Base Name: ...&#10;Location: (Underground / On a mountain / Underwater)&#10;Blocks I need: (Wood, Cobblestone, Diamond...)&#10;I choose this spot because: ...&#10;Special Feature: (Secret trapdoor / Farm / Waterfall)&#10;My pet guard: (A tamed wolf / A cat)"></textarea>
     <div class="button-row">
       <button onclick="submitBase()">Check My Base</button>
     </div>
@@ -294,83 +374,297 @@
 </div>
 
 <div id="popup">
+  <button id="popup-close" onclick="closePopup()" aria-label="Close">✕</button>
   <div id="popup-title">クリックした英語</div>
   <div id="popup-meaning">意味：</div>
+  <button id="popup-listen" onclick="listenPopup()">🔊 Listen</button>
 </div>
 
 <script>
+  /* ---------- Text-to-Speech ---------- */
+  let voices = [];
+  function loadVoices() { voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }
+  if ("speechSynthesis" in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+
+  function pickEnglishVoice() {
+    return voices.find(v => v.lang === "en-US")
+        || voices.find(v => v.lang && v.lang.indexOf("en") === 0)
+        || null;
+  }
+
+  function makeUtterance(text) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.9;
+    const v = pickEnglishVoice();
+    if (v) u.voice = v;
+    u.onerror = function () {};
+    return u;
+  }
+
+  function speak(text) {
+    if (!text || !("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(makeUtterance(text));
+  }
+
+  function speakSequence(lines) {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    lines.forEach(function (line) { speechSynthesis.speak(makeUtterance(line)); });
+  }
+
+  function stripHtml(html) {
+    const d = document.createElement("div");
+    d.innerHTML = html;
+    return d.textContent.replace(/\s+/g, " ").trim();
+  }
+
+  /* ---------- Message boxes remember their English text for listening ---------- */
+  const boxSay = {};
+
+  function setBox(id, html, sayText) {
+    document.getElementById(id).innerHTML = html;
+    boxSay[id] = sayText || stripHtml(html);
+  }
+
+  function speakBox(id) { speak(boxSay[id]); }
+
+  /* ---------- Vocabulary popup (bottom sheet) ---------- */
+  const popup = document.getElementById("popup");
   const popupTitle = document.getElementById("popup-title");
   const popupMeaning = document.getElementById("popup-meaning");
+  let activeWord = null;
+
+  function closePopup() {
+    popup.classList.remove("show");
+    if (activeWord) { activeWord.classList.remove("active"); activeWord = null; }
+  }
+
+  function listenPopup() { speak(popupTitle.textContent.trim()); }
 
   document.addEventListener("click", function (e) {
+    const closeBtn = e.target.closest("#popup-close");
+    if (closeBtn) { closePopup(); return; }
+    const listenBtn = e.target.closest("#popup-listen");
+    if (listenBtn) { listenPopup(); return; }
+    if (e.target.closest("#popup")) return;
     const word = e.target.closest(".word");
-    if (!word) return;
+    if (!word) { closePopup(); return; }
+    if (activeWord && activeWord !== word) activeWord.classList.remove("active");
+    activeWord = word;
+    word.classList.add("active");
     popupTitle.textContent = word.textContent.trim();
     popupMeaning.textContent = "意味：" + (word.getAttribute("data-meaning") || "");
+    popup.classList.add("show");
   });
 
-  function showCraft(text) {
-    document.getElementById("craftBox").innerHTML = text;
-  }
+  /* ---------- Crafting recipes ---------- */
+  const RECIPES = [
+    { label: "Pickaxe Recipe ⛏️",
+      html: "To <span class=\"word\" data-meaning=\"クラフトする\">craft</span> a <span class=\"word\" data-meaning=\"ツルハシ\">Pickaxe</span>, <span class=\"word\" data-meaning=\"わたしは必要とする\">I need</span> 3 <span class=\"word\" data-meaning=\"丸石\">Cobblestones</span> and 2 <span class=\"word\" data-meaning=\"棒\">Sticks</span>!" },
+    { label: "Bed Recipe 🛏️",
+      html: "To craft a <span class=\"word\" data-meaning=\"ベッド\">Bed</span>, I need 3 <span class=\"word\" data-meaning=\"羊毛\">Wool</span> blocks and 3 <span class=\"word\" data-meaning=\"木の板\">Wooden Planks</span>!" },
+    { label: "Torch Recipe 🕯️",
+      html: "To craft a <span class=\"word\" data-meaning=\"松明\">Torch</span>, I need 1 <span class=\"word\" data-meaning=\"石炭\">Coal</span> and 1 <span class=\"word\" data-meaning=\"棒\">Stick</span>!" },
+    { label: "Diamond Sword Recipe ⚔️",
+      html: "To craft a <span class=\"word\" data-meaning=\"剣\">Sword</span>, I need 2 <span class=\"word\" data-meaning=\"ダイヤモンド\">Diamonds</span> and 1 <span class=\"word\" data-meaning=\"棒\">Stick</span>!" },
+    { label: "Golden Apple Recipe 🍎✨",
+      html: "To craft a <span class=\"word\" data-meaning=\"金のリンゴ\">Golden Apple</span>, I need 1 <span class=\"word\" data-meaning=\"りんご\">Apple</span> and 8 <span class=\"word\" data-meaning=\"金インゴット（きんの塊）\">Gold Ingots</span>! <span class=\"word\" data-meaning=\"食べて回復しよう！\">Eat it to heal!</span>" }
+  ];
+
+  (function buildCraftButtons() {
+    const row = document.getElementById("craftButtons");
+    RECIPES.forEach(function (recipe) {
+      const b = document.createElement("button");
+      b.textContent = recipe.label;
+      b.onclick = function () { setBox("craftBox", recipe.html); };
+      row.appendChild(b);
+    });
+  })();
+
+  /* ---------- Survival dialogue (plain English lines for listening) ---------- */
+  const DIALOGUE_LINES = [
+    "Look! The sun is setting. Night is coming!",
+    "What should we do?",
+    "We need to build a shelter quickly!",
+    "I have 20 cobblestones. Choose a good spot!",
+    "Let's make a door! I need wood too!",
+    "We need to protect each other tonight!",
+    "If a zombie attacks, what should we do?",
+    "We'll attack it with our diamond sword! Protecting is better than attacking!",
+    "Watch out! A Creeper is behind you!",
+    "Raise your shield and protect yourself!",
+    "Let's catch fish for dinner!",
+    "Good idea! Tomorrow let's tame a wolf! First we need to collect bones!"
+  ];
+
+  function speakDialogue() { speakSequence(DIALOGUE_LINES); }
+
+  /* ---------- Emergency action commands ---------- */
+  const ACTIONS = [
+    { html: "A <span class='word' data-meaning='クリーパーが近くにいる！'>Creeper is close!</span> <span class='word' data-meaning='うしろにジャンプして逃げて！'>Jump backward and run!</span> — クリーパーだ！うしろにジャンプして逃げて！",
+      say: "A Creeper is close! Jump backward and run!" },
+    { html: "<span class='word' data-meaning='夜だ！'>Night time!</span> <span class='word' data-meaning='ベッドを置いて寝て！'>Place a bed and sleep!</span> — 夜だ！ベッドを置いて寝て！",
+      say: "Night time! Place a bed and sleep!" },
+    { html: "<span class='word' data-meaning='ダイヤを発見した！'>You found Diamonds!</span> <span class='word' data-meaning='すばやく掘って！'>Mine fast!</span> — ダイヤ発見！すばやく掘って！",
+      say: "You found diamonds! Mine fast!" },
+    { html: "<span class='word' data-meaning='スケルトンが矢を射ってきた！'>A Skeleton is shooting arrows!</span> <span class='word' data-meaning='盾でガードして！'>Block with your shield!</span> — スケルトンが矢を射ってきた！盾でガードして！",
+      say: "A Skeleton is shooting arrows! Block with your shield!" },
+    { html: "<span class='word' data-meaning='水に落ちた！'>You fell in water!</span> <span class='word' data-meaning='上に泳いで！'>Swim up!</span> — 水に落ちた！上に泳いで！",
+      say: "You fell in water! Swim up!" },
+    { html: "<span class='word' data-meaning='剣をえらんで、ゾンビをこうげきして！'>Choose a sword and attack the zombie!</span> — 剣をえらんで、ゾンビをこうげきして！",
+      say: "Choose a sword and attack the zombie!" },
+    { html: "<span class='word' data-meaning='友達をスケルトンからまもって！'>Protect your friend from the skeleton!</span> — 友達をスケルトンからまもって！",
+      say: "Protect your friend from the skeleton!" },
+    { html: "<span class='word' data-meaning='場所をえらんで、拠点をまもって！'>Choose a spot and protect our base!</span> — 場所をえらんで、拠点(きょてん)をまもって！",
+      say: "Choose a spot and protect our base!" },
+    { html: "<span class='word' data-meaning='ゾンビが来る！'>A zombie is coming!</span> <span class='word' data-meaning='剣で倒して！'>Defeat it with your sword!</span> — ゾンビが来る！剣でたおして！",
+      say: "A zombie is coming! Defeat it with your sword!" },
+    { html: "<span class='word' data-meaning='野生のピカチュウが現れた！'>A wild Pikachu appeared!</span> <span class='word' data-meaning='ボールを投げてつかまえて！'>Throw a ball to catch it!</span> — 野生のピカチュウが現れた！ボールをなげてつかまえて！",
+      say: "A wild Pikachu appeared! Throw a ball to catch it!" },
+    { html: "<span class='word' data-meaning='ハートが少ない！'>Your hearts are low!</span> <span class='word' data-meaning='金のリンゴを食べて回復して！'>Eat a golden apple and heal!</span> — ハートが少ない！金のリンゴを食べてかいふくして！",
+      say: "Your hearts are low! Eat a golden apple and heal!" },
+    { html: "<span class='word' data-meaning='野生のオオカミだ！'>A wild wolf appeared!</span> <span class='word' data-meaning='骨をあげて飼い慣らして！'>Give it bones to tame it!</span> — 野生のオオカミだ！ほねをあげてかいならして！",
+      say: "A wild wolf appeared! Give it bones to tame it!" }
+  ];
 
   function randomAction() {
-    const actions = [
-      "A <span class='word' data-meaning='クリーパーが近くにいる！'>Creeper is close!</span> <span class='word' data-meaning='うしろにジャンプして逃げて！'>Jump backward and run!</span> — クリーパーだ！うしろにジャンプして逃げて！",
-      "<span class='word' data-meaning='夜だ！'>Night time!</span> <span class='word' data-meaning='ベッドを置いて寝て！'>Place a bed and sleep!</span> — 夜だ！ベッドを置いて寝て！",
-      "<span class='word' data-meaning='ダイヤを発見した！'>You found Diamonds!</span> <span class='word' data-meaning='すばやく掘って！'>Mine fast!</span> — ダイヤ発見！すばやく掘って！",
-      "<span class='word' data-meaning='スケルトンが矢を射ってきた！'>A Skeleton is shooting arrows!</span> <span class='word' data-meaning='盾でガードして！'>Block with your shield!</span> — スケルトンが矢を射ってきた！盾でガードして！",
-      "<span class='word' data-meaning='水に落ちた！'>You fell in water!</span> <span class='word' data-meaning='上に泳いで！'>Swim up!</span> — 水に落ちた！上に泳いで！",
-      "<span class='word' data-meaning='剣をえらんで、ゾンビをこうげきして！'>Choose a sword and attack the zombie!</span> — 剣をえらんで、ゾンビをこうげきして！",
-      "<span class='word' data-meaning='友達をスケルトンからまもって！'>Protect your friend from the skeleton!</span> — 友達をスケルトンからまもって！",
-      "<span class='word' data-meaning='場所をえらんで、拠点をまもって！'>Choose a spot and protect our base!</span> — 場所をえらんで、拠点(きょてん)をまもって！"
-    ];
-    document.getElementById("actionBox").innerHTML =
-      actions[Math.floor(Math.random() * actions.length)];
+    const pick = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+    setBox("actionBox", pick.html, pick.say);
   }
 
-  /* Riddles */
+  /* ---------- Mob guessing riddles with score ---------- */
+  const RIDDLES = [
+    ["I am <span class='word' data-meaning='緑色'>green</span>, I am <span class='word' data-meaning='静かな'>silent</span>, and I <span class='word' data-meaning='爆発する'>explode</span> when I get close to you! <span class='word' data-meaning='私はだれでしょう？'>Who am I?</span>", "Creeper / クリーパー"],
+    ["I am <span class='word' data-meaning='背が高い'>tall</span> and <span class='word' data-meaning='黒い'>black</span>, have <span class='word' data-meaning='紫色の目'>purple eyes</span>, and I <span class='word' data-meaning='ブロックを持ち上げる'>pick up blocks</span>. Don't look at my eyes! Who am I?", "Enderman / エンダーマン"],
+    ["I wear <span class='word' data-meaning='鉄のよろい'>iron armor</span>, <span class='word' data-meaning='ゆっくり歩く'>walk slowly</span> at night, and <span class='word' data-meaning='朝日に焼かれる'>burn in the morning sun</span>. Who am I?", "Zombie / ゾンビ"],
+    ["I live in <span class='word' data-meaning='村'>villages</span>, have a <span class='word' data-meaning='大きな鼻'>big nose</span>, and love to <span class='word' data-meaning='エメラルドを取引する'>trade emeralds</span>. Who am I?", "Villager / 村人"],
+    ["I fly in the <span class='word' data-meaning='エンドの世界'>End dimension</span>, shoot <span class='word' data-meaning='紫色の火'>purple fire</span>, and am the <span class='word' data-meaning='最後のボス'>final boss</span>! Who am I?", "Ender Dragon / エンダードラゴン"],
+    ["I live in the <span class='word' data-meaning='ネザー'>Nether</span>. My best <span class='word' data-meaning='わざ'>Move</span> is <span class='word' data-meaning='炎'>fire</span>, so I <span class='word' data-meaning='こうげきする'>attack</span> you with <span class='word' data-meaning='火の玉'>fireballs</span>! What <span class='word' data-meaning='タイプ'>Type</span> am I? <span class='word' data-meaning='当ててみて！'>Guess!</span>", "Blaze / ブレイズ"],
+    ["Villagers <span class='word' data-meaning='えらぶ'>choose</span> me to <span class='word' data-meaning='まもる'>protect</span> the village. My <span class='word' data-meaning='こうげき'>Attack</span> is very strong, and I <span class='word' data-meaning='つぶす'>smash</span> raiders! Who am I?", "Iron Golem / アイアンゴーレム"],
+    ["When a Zombie gets <span class='word' data-meaning='水の中へ'>into water</span>, it can <span class='word' data-meaning='進化する'>evolve</span>. Then I swim in the <span class='word' data-meaning='海'>ocean</span> and <span class='word' data-meaning='こうげきする'>attack</span> you underwater! <span class='word' data-meaning='私はだれでしょう？'>Who am I?</span>", "Drowned / ドラウンド(水中ゾンビ)"],
+    ["I live in the <span class='word' data-meaning='森'>forest</span>. Give me <span class='word' data-meaning='骨'>bones</span>, and people can <span class='word' data-meaning='飼い慣らす'>tame</span> me. Then I am your pet, and I <span class='word' data-meaning='まもる'>protect</span> you like a dog! <span class='word' data-meaning='私はだれでしょう？'>Who am I?</span>", "Wolf / オオカミ"],
+    ["I am <span class='word' data-meaning='小さくてピンク色'>small and pink</span>, I live in the <span class='word' data-meaning='水'>water</span>, and I have a cute smiling face. I can even <span class='word' data-meaning='回復する'>heal</span> my own body! <span class='word' data-meaning='私はだれでしょう？'>Who am I?</span>", "Axolotl / ウーパールーパー"]
+  ];
+
   let currentAnswer = "";
+  let answeredCorrectly = false;
+  let answerShown = false;
+  let score = 0;
+  let total = 0;
+  let streak = 0;
+  let lastRiddleIndex = -1;
+
+  function updateScore() {
+    document.getElementById("riddleScore").textContent =
+      "Score: " + score + " / " + total + "　🎯 Streak: " + streak;
+  }
 
   function newRiddle() {
-    const riddles = [
-      ["I am <span class='word' data-meaning='緑色'>green</span>, I am <span class='word' data-meaning='静かな'>silent</span>, and I <span class='word' data-meaning='爆発する'>explode</span> when I get close to you! <span class='word' data-meaning='私はだれでしょう？'>Who am I?</span>", "Creeper / クリーパー"],
-      ["I am <span class='word' data-meaning='背が高い'>tall</span> and <span class='word' data-meaning='黒い'>black</span>, have <span class='word' data-meaning='紫色の目'>purple eyes</span>, and I <span class='word' data-meaning='ブロックを持ち上げる'>pick up blocks</span>. Don't look at my eyes! Who am I?", "Enderman / エンダーマン"],
-      ["I wear <span class='word' data-meaning='鉄のよろい'>iron armor</span>, <span class='word' data-meaning='ゆっくり歩く'>walk slowly</span> at night, and <span class='word' data-meaning='朝日に焼かれる'>burn in the morning sun</span>. Who am I?", "Zombie / ゾンビ"],
-      ["I live in <span class='word' data-meaning='村'>villages</span>, have a <span class='word' data-meaning='大きな鼻'>big nose</span>, and love to <span class='word' data-meaning='エメラルドを取引する'>trade emeralds</span>. Who am I?", "Villager / 村人"],
-      ["I fly in the <span class='word' data-meaning='エンドの世界'>End dimension</span>, shoot <span class='word' data-meaning='紫色の火'>purple fire</span>, and am the <span class='word' data-meaning='最後のボス'>final boss</span>! Who am I?", "Ender Dragon / エンダードラゴン"],
-      ["I live in the <span class='word' data-meaning='ネザー'>Nether</span>. My best <span class='word' data-meaning='わざ'>Move</span> is <span class='word' data-meaning='炎'>fire</span>, so I <span class='word' data-meaning='こうげきする'>attack</span> you with <span class='word' data-meaning='火の玉'>fireballs</span>! What <span class='word' data-meaning='タイプ'>Type</span> am I? <span class='word' data-meaning='当ててみて！'>Guess!</span>", "Blaze / ブレイズ"],
-      ["Villagers <span class='word' data-meaning='えらぶ'>choose</span> me to <span class='word' data-meaning='まもる'>protect</span> the village. My <span class='word' data-meaning='こうげき'>Attack</span> is very strong, and I <span class='word' data-meaning='つぶす'>smash</span> raiders! Who am I?", "Iron Golem / アイアンゴーレム"],
-      ["When a Zombie gets <span class='word' data-meaning='水の中へ'>into water</span>, it can <span class='word' data-meaning='進化する'>evolve</span>. Then I swim in the <span class='word' data-meaning='海'>ocean</span> and <span class='word' data-meaning='こうげきする'>attack</span> you underwater! <span class='word' data-meaning='私はだれでしょう？'>Who am I?</span>", "Drowned / ドラウンド(水中ゾンビ)"]
-    ];
-    const pick = riddles[Math.floor(Math.random() * riddles.length)];
-    document.getElementById("riddleBox").innerHTML = pick[0];
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * RIDDLES.length);
+    } while (idx === lastRiddleIndex && RIDDLES.length > 1);
+    lastRiddleIndex = idx;
+    const pick = RIDDLES[idx];
+    setBox("riddleBox", pick[0]);
     currentAnswer = pick[1];
-    document.getElementById("riddleAnswer").style.display = "none";
+    answeredCorrectly = false;
+    answerShown = false;
+    const answerBox = document.getElementById("riddleAnswer");
+    answerBox.style.display = "none";
+  }
+
+  function gotIt() {
+    const answerBox = document.getElementById("riddleAnswer");
+    if (!currentAnswer) {
+      answerBox.innerHTML = "<span class='word' data-meaning='まず「New Mob Riddle」を押してね！'>Press \"New Mob Riddle\" first!</span>";
+      answerBox.style.display = "block";
+      return;
+    }
+    if (answeredCorrectly || answerShown) {
+      answerBox.innerHTML = "🎉 <span class='word' data-meaning='次のなぞなぞは「New Mob Riddle」で！'>You already answered this one! Press \"New Mob Riddle\" for the next riddle!</span>";
+      answerBox.style.display = "block";
+      return;
+    }
+    answeredCorrectly = true;
+    answerShown = true;
+    total++;
+    score++;
+    streak++;
+    updateScore();
+    answerBox.innerHTML = "🎉 <span class='word' data-meaning='すばらしい！そのとおり！'>Correct!</span> " + currentAnswer;
+    answerBox.style.display = "block";
+    speak("Correct!");
   }
 
   function showAnswer() {
-    if (!currentAnswer) return;
-    const box = document.getElementById("riddleAnswer");
-    box.innerHTML = "<span class='word' data-meaning='こたえ'>Answer:</span> " + currentAnswer;
-    box.style.display = "block";
+    const answerBox = document.getElementById("riddleAnswer");
+    if (!currentAnswer) {
+      answerBox.innerHTML = "<span class='word' data-meaning='まず「New Mob Riddle」を押してね！'>Press \"New Mob Riddle\" first!</span>";
+      answerBox.style.display = "block";
+      return;
+    }
+    if (!answeredCorrectly && !answerShown) {
+      total++;
+      streak = 0;
+      updateScore();
+    }
+    answerShown = true;
+    answerBox.innerHTML = "<span class='word' data-meaning='こたえ'>Answer:</span> " + currentAnswer;
+    answerBox.style.display = "block";
   }
 
+  /* ---------- Secret base checker ---------- */
+  const BASE_WORD_MEANINGS = {
+    need: "必要とする",
+    choose: "えらぶ",
+    protect: "まもる",
+    attack: "こうげきする",
+    catch: "つかまえる",
+    collect: "あつめる",
+    defeat: "たおす",
+    heal: "回復する",
+    tame: "飼い慣らす",
+    battle: "戦う・バトル",
+    mine: "ほる",
+    build: "建設する",
+    explore: "たんけんする",
+    craft: "クラフトする"
+  };
+  const NEW_SIX = ["catch", "collect", "defeat", "heal", "tame", "battle"];
+
   function submitBase() {
-    const text = document.getElementById("baseText").value.trim();
+    const raw = document.getElementById("baseText").value.trim();
     const box = document.getElementById("baseBox");
-    if (!text) {
+    if (!raw) {
       box.innerHTML = "<span class='word' data-meaning='最初に秘密基地について少し書いてね！'>Please write a few words about your secret base first!</span>";
       return;
     }
-    const compliments = [
-      "Awesome build, Builder! That sounds like an <span class='word' data-meaning='攻められない要塞'>impenetrable fortress</span>!",
-      "Great English! I would love to <span class='word' data-meaning='説明してもらう'>hear you describe</span> and explore your secret base!",
-      "Fantastic design! Your <span class='word' data-meaning='選択'>choice</span> of location and blocks is very creative!",
-      "Ready for survival! No mob can break into a base you <span class='word' data-meaning='まもる'>protect</span> like that!",
-      "Perfect plan! You know how to <span class='word' data-meaning='まもる'>protect</span>, what blocks you <span class='word' data-meaning='必要とする'>need</span>, and when to <span class='word' data-meaning='こうげきする'>attack</span>!"
-    ];
-    box.innerHTML = compliments[Math.floor(Math.random() * compliments.length)];
+    const lower = raw.toLowerCase();
+    const found = Object.keys(BASE_WORD_MEANINGS).filter(function (w) {
+      return new RegExp("\\b" + w + "\\b").test(lower);
+    });
+    if (found.length === 0) {
+      box.innerHTML = "<span class='word' data-meaning='いいスタートだ！'>Nice start, Builder!</span> 💪 <span class='word' data-meaning='冒険ことばも使ってみよう！'>Now try some adventure words</span>: <span class='word' data-meaning='必要とする'>need</span>, <span class='word' data-meaning='まもる'>protect</span>, <span class='word' data-meaning='飼い慣らす'>tame</span>...";
+      return;
+    }
+    const foundHtml = found.slice(0, 5).map(function (w) {
+      return "<strong style='color:#7bed9f;'>" + w + "</strong>";
+    }).join(", ");
+    const suggestions = NEW_SIX.filter(function (w) { return found.indexOf(w) === -1; });
+    let challenge;
+    if (suggestions.length > 0 && found.length < NEW_SIX.length) {
+      const s = suggestions[0];
+      challenge = " <span class='word' data-meaning='チャレンジ：'>Challenge:</span> can you also write one sentence with <span class='word' data-meaning='" + BASE_WORD_MEANINGS[s] + "'>" + s + "</span>?";
+    } else {
+      challenge = " <span class='word' data-meaning='すごい！新しい単語を全部使ったね！'>You used ALL six new adventure words — amazing!</span> 🏆";
+    }
+    box.innerHTML = "<span class='word' data-meaning='すばらしい英語だ、ビルダー！'>Great English, Builder!</span> ✨ <span class='word' data-meaning='つかったことば'>Words you used</span>: " + foundHtml + "." + challenge;
   }
+
+  updateScore();
 </script>
 
 </body>
