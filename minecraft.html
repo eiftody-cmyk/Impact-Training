@@ -791,30 +791,35 @@
     {
       question: "What ingredient makes a <strong>Fire Resistance</strong> Potion?",
       hint: "This potion makes you immune to lava and fire!",
+      hintJp: "このポーションはラバと炎への耐性を与えるよ！",
       answer: "Magma Cream",
       options: ["Magma Cream", "Sugar", "Blaze Powder", "Ghast Tear"]
     },
     {
       question: "What ingredient makes a <strong>Healing</strong> Potion?",
       hint: "This potion restores health instantly!",
+      hintJp: "このポーションは体力をすばやく回復するよ！",
       answer: "Glistering Melon Slice",
       options: ["Glistering Melon Slice", "Golden Carrot", "Blaze Powder", "Sugar"]
     },
     {
       question: "What ingredient makes a <strong>Strength</strong> Potion?",
       hint: "This potion gives you a damage boost!",
+      hintJp: "このポーションはこうげき力がアップするよ！",
       answer: "Blaze Powder",
       options: ["Blaze Powder", "Magma Cream", "Sugar", "Spider Eye"]
     },
     {
       question: "What ingredient makes a <strong>Swiftness</strong> Potion?",
       hint: "This potion makes you fast!",
+      hintJp: "このポーションはすばやさがアップするよ！",
       answer: "Sugar",
       options: ["Sugar", "Spider Eye", "Pufferfish", "Blaze Powder"]
     },
     {
       question: "What ingredient makes a <strong>Night Vision</strong> Potion?",
       hint: "This potion lets you see in the dark!",
+      hintJp: "このポーションは暗闇でも見えるようになるよ！",
       answer: "Golden Carrot",
       options: ["Golden Carrot", "Magma Cream", "Sugar", "Ghast Tear"]
     }
@@ -848,7 +853,7 @@
     quizLastIndex = idx;
     quizCurrent = QUIZ_POTIONS[idx];
     document.getElementById("quizQuestion").innerHTML =
-      "🧪 " + quizCurrent.question + "<br><span class='word' data-meaning='" + quizCurrent.hint + "'>" + quizCurrent.hint + "</span>";
+      "🧪 " + quizCurrent.question + "<br><span class='word' data-meaning='" + quizCurrent.hintJp + "'>" + quizCurrent.hint + "</span>";
     var opts = shuffleArray(quizCurrent.options);
     var container = document.getElementById("quizOptions");
     container.innerHTML = "";
