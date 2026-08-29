@@ -262,6 +262,7 @@
       align-items: center;
       gap: 4px;
       min-height: 44px;
+      min-width: 100px;
       padding: 4px 12px;
       border: 2px dashed #747d8c;
       border-radius: 6px;
@@ -848,19 +849,23 @@
       if (i < brewCurrentPotion.blanks.length) {
         var blank = document.createElement("button");
         blank.className = "brew-blank";
+        blank.setAttribute("data-index", i);
         var opt = brewCurrentPotion.blanks[i].options[brewCycle[i]];
         blank.textContent = opt;
         var arrow = document.createElement("span");
         arrow.className = "cycle-arrow";
         arrow.textContent = " ▾";
         blank.appendChild(arrow);
-        blank.addEventListener("click", (function(idx) {
-          return function() { cycleBlank(idx); };
-        })(i));
         container.appendChild(blank);
       }
     }
   }
+
+  document.getElementById("brewBlanks").addEventListener("click", function(e) {
+    var blank = e.target.closest(".brew-blank");
+    if (!blank) return;
+    cycleBlank(parseInt(blank.getAttribute("data-index")));
+  });
 
   function cycleBlank(index) {
     closePopup();
