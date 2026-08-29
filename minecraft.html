@@ -243,59 +243,60 @@
       color: #000000;
     }
 
-    /* --- Brewing Game (Click-to-Cycle) --- */
-    .brew-instruction {
-      margin-top: 10px;
-      color: #dfe6e9;
-      font-size: 0.95rem;
-    }
-    .brew-sentence {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    /* --- Potion Quiz --- */
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
       margin-top: 14px;
-      align-items: center;
-      line-height: 2;
     }
-    .brew-blank {
-      display: inline-flex;
+    .quiz-btn {
+      display: flex;
       align-items: center;
-      gap: 4px;
-      min-height: 44px;
-      min-width: 100px;
-      padding: 4px 12px;
-      border: 2px dashed #747d8c;
+      justify-content: center;
+      min-height: 52px;
+      padding: 10px 14px;
       border-radius: 6px;
-      background: #2f3542;
-      color: #fbc531;
-      font-weight: bold;
-      font-size: 0.95rem;
+      background: #44bd32;
+      border: 2px solid #2ed573;
+      border-bottom: 4px solid #26af5f;
+      color: #fff;
       font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: bold;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      transition: 0.12s ease;
       touch-action: manipulation;
       user-select: none;
+      text-align: center;
     }
-    .brew-blank:hover {
-      border-color: #fbc531;
+    .quiz-btn:hover {
+      background: #2ed573;
+      transform: translateY(-2px);
     }
-    .brew-blank:active {
+    .quiz-btn:active {
       transform: scale(0.97);
+      filter: brightness(0.9);
     }
-    .brew-blank .cycle-arrow {
-      color: #747d8c;
-      font-size: 0.7rem;
-    }
-    .brew-correct {
+    .quiz-btn.correct {
+      background: #2ed573;
+      border-color: #26af5f;
       animation: brewFlash 0.6s ease;
     }
-    .brew-wrong {
+    .quiz-btn.wrong {
+      background: #e84118;
+      border-color: #c23616;
       animation: brewShake 0.5s ease;
     }
+    .quiz-btn:disabled {
+      cursor: default;
+      opacity: 0.6;
+      transform: none;
+    }
     @keyframes brewFlash {
-      0% { background: #1e272c; }
-      40% { background: #2ed573; color: #fff; }
-      100% { background: #1e272c; }
+      0% { filter: brightness(1); }
+      40% { filter: brightness(1.4); }
+      100% { filter: brightness(1); }
     }
     @keyframes brewShake {
       0%, 100% { transform: translateX(0); }
@@ -356,22 +357,18 @@
     </ul>
   </section>
 
-  <!-- Potion Brewing Game -->
+  <!-- Potion Quiz -->
   <section class="section">
     <span class="badge badge-game">Potion Game</span>
-    <h2>Brewing Potions / ポーションを醸造しよう</h2>
-    <p class="brew-instruction">
-      <span class="word" data-meaning="空欄をタップして正しい言葉を選ぼう！">Tap each blank to cycle through options!</span>
-      <br><span class="word" data-meaning="全部の空欄を揃えてから「Brew!」を押そう！">Get all blanks right, then press "Brew!"</span>
-    </p>
-    <div id="brewTask" class="message-box">Press "New Potion" to start! / 「New Potion」を押してね！</div>
-    <div id="brewBlanks" class="brew-sentence"></div>
-    <div id="brewResult" class="message-box" style="display:none"></div>
-    <div id="brewScore" class="score-box"></div>
+    <h2>What's the Ingredient? / どの材料かな？</h2>
+    <p><span class="word" data-meaning="ポーションの材料をえらぼう！">Choose the correct ingredient for each potion!</span></p>
+    <div id="quizQuestion" class="message-box">Press "Next Potion" to start! / 「Next Potion」を押してね！</div>
+    <div id="quizOptions" class="quiz-options"></div>
+    <div id="quizResult" class="message-box" style="display:none"></div>
+    <div id="quizScore" class="score-box"></div>
     <div class="button-row">
-      <button onclick="brewPotion()">Brew! 🧪</button>
-      <button onclick="newPotion()">New Potion</button>
-      <button class="speak-btn" onclick="speakBrewTask()">🔊 Listen</button>
+      <button onclick="nextQuiz()">Next Potion</button>
+      <button class="speak-btn" onclick="speakQuiz()">🔊 Listen</button>
     </div>
   </section>
 
@@ -564,7 +561,6 @@
     const listenBtn = e.target.closest("#popup-listen");
     if (listenBtn) { listenPopup(); return; }
     if (e.target.closest("#popup")) return;
-    if (e.target.closest("#brewResult")) return;
     const word = e.target.closest(".word");
     if (!word) { closePopup(); return; }
     if (activeWord && activeWord !== word) activeWord.classList.remove("active");
@@ -782,159 +778,127 @@
 
   updateScore();
 
-  /* ---------- Potion Brewing Game (click-to-cycle) ---------- */
-  var BREW_POTIONS = [
+  /* ---------- Potion Quiz ---------- */
+  var QUIZ_POTIONS = [
     {
-      name: "Fire Resistance",
-      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it makes you _____ to lava and fire!",
-      blanks: [
-        { options: ["Fire Resistance", "Healing", "Strength", "Swiftness"], answer: "Fire Resistance" },
-        { options: ["Magma Cream", "Sugar", "Blaze Powder", "Ghast Tear"], answer: "Magma Cream" },
-        { options: ["immune", "fast", "strong", "invisible"], answer: "immune" }
-      ]
+      question: "What ingredient makes a <strong>Fire Resistance</strong> Potion?",
+      hint: "This potion makes you immune to lava and fire!",
+      answer: "Magma Cream",
+      options: ["Magma Cream", "Sugar", "Blaze Powder", "Ghast Tear"]
     },
     {
-      name: "Healing",
-      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it _____ health instantly!",
-      blanks: [
-        { options: ["Healing", "Strength", "Night Vision", "Swiftness"], answer: "Healing" },
-        { options: ["Glistering Melon Slice", "Golden Carrot", "Blaze Powder", "Sugar"], answer: "Glistering Melon Slice" },
-        { options: ["restores", "drains", "freezes", "absorbs"], answer: "restores" }
-      ]
+      question: "What ingredient makes a <strong>Healing</strong> Potion?",
+      hint: "This potion restores health instantly!",
+      answer: "Glistering Melon Slice",
+      options: ["Glistering Melon Slice", "Golden Carrot", "Blaze Powder", "Sugar"]
     },
     {
-      name: "Strength",
-      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it gives you a _____ boost!",
-      blanks: [
-        { options: ["Strength", "Healing", "Swiftness", "Fire Resistance"], answer: "Strength" },
-        { options: ["Blaze Powder", "Magma Cream", "Sugar", "Spider Eye"], answer: "Blaze Powder" },
-        { options: ["damage", "speed", "poison", "healing"], answer: "damage" }
-      ]
+      question: "What ingredient makes a <strong>Strength</strong> Potion?",
+      hint: "This potion gives you a damage boost!",
+      answer: "Blaze Powder",
+      options: ["Blaze Powder", "Magma Cream", "Sugar", "Spider Eye"]
     },
     {
-      name: "Swiftness",
-      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it makes you _____!",
-      blanks: [
-        { options: ["Swiftness", "Strength", "Healing", "Night Vision"], answer: "Swiftness" },
-        { options: ["Sugar", "Spider Eye", "Pufferfish", "Blaze Powder"], answer: "Sugar" },
-        { options: ["fast", "invisible", "heavy", "strong"], answer: "fast" }
-      ]
+      question: "What ingredient makes a <strong>Swiftness</strong> Potion?",
+      hint: "This potion makes you fast!",
+      answer: "Sugar",
+      options: ["Sugar", "Spider Eye", "Pufferfish", "Blaze Powder"]
     },
     {
-      name: "Night Vision",
-      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it lets you _____ in the dark!",
-      blanks: [
-        { options: ["Night Vision", "Swiftness", "Healing", "Fire Resistance"], answer: "Night Vision" },
-        { options: ["Golden Carrot", "Magma Cream", "Sugar", "Ghast Tear"], answer: "Golden Carrot" },
-        { options: ["see", "hide", "fall", "swim"], answer: "see" }
-      ]
+      question: "What ingredient makes a <strong>Night Vision</strong> Potion?",
+      hint: "This potion lets you see in the dark!",
+      answer: "Golden Carrot",
+      options: ["Golden Carrot", "Magma Cream", "Sugar", "Ghast Tear"]
     }
   ];
 
-  var brewCycle = [0, 0, 0];
-  var brewCurrentPotion = null;
-  var brewScore = 0;
-  var brewTotal = 0;
-  var brewStreak = 0;
-  var brewLastIndex = -1;
+  var quizCurrent = null;
+  var quizScore = 0;
+  var quizTotal = 0;
+  var quizStreak = 0;
+  var quizLastIndex = -1;
+  var quizLocked = false;
 
-  function renderBrewBlanks() {
-    var container = document.getElementById("brewBlanks");
-    container.innerHTML = "";
-    var parts = brewCurrentPotion.sentence.split("_____");
-    for (var i = 0; i < parts.length; i++) {
-      var span = document.createElement("span");
-      span.textContent = parts[i];
-      container.appendChild(span);
-      if (i < brewCurrentPotion.blanks.length) {
-        var blank = document.createElement("button");
-        blank.className = "brew-blank";
-        blank.setAttribute("data-index", i);
-        var opt = brewCurrentPotion.blanks[i].options[brewCycle[i]];
-        blank.textContent = opt;
-        var arrow = document.createElement("span");
-        arrow.className = "cycle-arrow";
-        arrow.textContent = " ▾";
-        blank.appendChild(arrow);
-        container.appendChild(blank);
-      }
+  function shuffleArray(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
     }
+    return a;
   }
 
-  document.getElementById("brewBlanks").addEventListener("click", function(e) {
-    var blank = e.target.closest(".brew-blank");
-    if (!blank) return;
-    cycleBlank(parseInt(blank.getAttribute("data-index")));
-  });
-
-  function cycleBlank(index) {
-    closePopup();
-    var opts = brewCurrentPotion.blanks[index].options;
-    brewCycle[index] = (brewCycle[index] + 1) % opts.length;
-    renderBrewBlanks();
-  }
-
-  function brewPotion() {
-    var resultBox = document.getElementById("brewResult");
-    if (!brewCurrentPotion) {
-      resultBox.style.display = "block";
-      resultBox.innerHTML = "<span class='word' data-meaning='まず「New Potion」を押してね！'>Press \"New Potion\" first!</span>";
-      return;
-    }
-    var correct = true;
-    for (var i = 0; i < brewCurrentPotion.blanks.length; i++) {
-      if (brewCycle[i] !== 0) {
-        correct = false;
-        break;
-      }
-    }
-    brewTotal++;
-    resultBox.style.display = "block";
-    if (correct) {
-      brewScore++;
-      brewStreak++;
-      resultBox.innerHTML = "🎉 <span class='word' data-meaning='すばらしい！'>Perfect brew!</span> " + brewCurrentPotion.name + " <span class='word' data-meaning='ポーションをえた！'>Potion acquired!</span>";
-      resultBox.classList.remove("brew-wrong");
-      resultBox.classList.add("brew-correct");
-      speak("Perfect brew! " + brewCurrentPotion.name + " Potion acquired!");
-    } else {
-      brewStreak = 0;
-      var answers = brewCurrentPotion.blanks.map(function(b) { return b.answer; }).join(", ");
-      resultBox.innerHTML = "✖ <span class='word' data-meaning='ざんねん！'>Not quite!</span> <span class='word' data-meaning='こたえ'>Answer</span>: " + answers;
-      resultBox.classList.remove("brew-correct");
-      resultBox.classList.add("brew-wrong");
-      speak("Not quite! The answer is " + brewCurrentPotion.name + ".");
-    }
-    updateBrewScore();
-  }
-
-  function newPotion() {
-    var resultBox = document.getElementById("brewResult");
+  function nextQuiz() {
+    quizLocked = false;
+    var resultBox = document.getElementById("quizResult");
     resultBox.style.display = "none";
     resultBox.classList.remove("brew-correct", "brew-wrong");
-    brewCycle = [0, 0, 0];
     var idx;
     do {
-      idx = Math.floor(Math.random() * BREW_POTIONS.length);
-    } while (idx === brewLastIndex && BREW_POTIONS.length > 1);
-    brewLastIndex = idx;
-    brewCurrentPotion = BREW_POTIONS[idx];
-    var taskBox = document.getElementById("brewTask");
-    taskBox.innerHTML = "🧪 <strong>Brew a _____ Potion!</strong> <span class='word' data-meaning='" + brewCurrentPotion.name + "のポーションをつくれ！'>" + brewCurrentPotion.name + "</span>";
-    renderBrewBlanks();
+      idx = Math.floor(Math.random() * QUIZ_POTIONS.length);
+    } while (idx === quizLastIndex && QUIZ_POTIONS.length > 1);
+    quizLastIndex = idx;
+    quizCurrent = QUIZ_POTIONS[idx];
+    document.getElementById("quizQuestion").innerHTML =
+      "🧪 " + quizCurrent.question + "<br><span class='word' data-meaning='" + quizCurrent.hint + "'>" + quizCurrent.hint + "</span>";
+    var opts = shuffleArray(quizCurrent.options);
+    var container = document.getElementById("quizOptions");
+    container.innerHTML = "";
+    for (var i = 0; i < opts.length; i++) {
+      var btn = document.createElement("button");
+      btn.className = "quiz-btn";
+      btn.textContent = opts[i];
+      btn.setAttribute("data-answer", opts[i]);
+      btn.onclick = function() { checkAnswer(this.getAttribute("data-answer"), this); };
+      container.appendChild(btn);
+    }
   }
 
-  function speakBrewTask() {
-    if (!brewCurrentPotion) {
-      speak("Press New Potion to start!");
+  function checkAnswer(chosen, btnEl) {
+    if (quizLocked) return;
+    closePopup();
+    var resultBox = document.getElementById("quizResult");
+    resultBox.style.display = "block";
+    quizTotal++;
+    if (chosen === quizCurrent.answer) {
+      quizLocked = true;
+      quizScore++;
+      quizStreak++;
+      btnEl.classList.add("correct");
+      resultBox.innerHTML = "🎉 <span class='word' data-meaning='すばらしい！'>Correct!</span> " + quizCurrent.answer + " <span class='word' data-meaning='が正解！'>is the answer!</span>";
+      resultBox.classList.remove("brew-wrong");
+      resultBox.classList.add("brew-correct");
+      speak("Correct! " + quizCurrent.answer);
+      disableButtons();
+    } else {
+      quizStreak = 0;
+      btnEl.classList.add("wrong");
+      btnEl.disabled = true;
+      resultBox.innerHTML = "✖ <span class='word' data-meaning='ざんねん！'>Try again!</span>";
+      resultBox.classList.remove("brew-correct");
+      resultBox.classList.add("brew-wrong");
+    }
+    updateQuizScore();
+  }
+
+  function disableButtons() {
+    var btns = document.getElementById("quizOptions").querySelectorAll(".quiz-btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].disabled = true;
+    }
+  }
+
+  function speakQuiz() {
+    if (!quizCurrent) {
+      speak("Press Next Potion to start!");
       return;
     }
-    speak("Brew a " + brewCurrentPotion.name + " Potion. " + brewCurrentPotion.sentence.replace(/_____/g, "blank"));
+    speak(quizCurrent.question.replace(/<[^>]+>/g, "") + " " + quizCurrent.hint);
   }
 
-  function updateBrewScore() {
-    document.getElementById("brewScore").textContent =
-      "Score: " + brewScore + " / " + brewTotal + "　🎯 Streak: " + brewStreak;
+  function updateQuizScore() {
+    document.getElementById("quizScore").textContent =
+      "Score: " + quizScore + " / " + quizTotal + "　🎯 Streak: " + quizStreak;
   }
 </script>
 
