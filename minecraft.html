@@ -395,6 +395,26 @@
     </ul>
   </section>
 
+  <!-- Potion Brewing Game -->
+  <section class="section">
+    <span class="badge badge-game">Potion Game</span>
+    <h2>Brewing Potions / ポーションを醸造しよう</h2>
+    <p class="brew-instruction">
+      <span class="word" data-meaning="タップして単語を選んで、空欄に入れよう！">Tap a word to select it, then tap a blank to place it!</span>
+      <br><span class="word" data-meaning="3つの空欄を全部うめて、「Brew!」を押そう！">Fill all 3 blanks, then press "Brew!"</span>
+    </p>
+    <div id="brewTask" class="message-box">Press "New Potion" to start! / 「New Potion」を押してね！</div>
+    <div id="brewBlanks" class="blank-row"></div>
+    <div id="brewBank" class="word-bank"></div>
+    <div id="brewResult" class="message-box" style="display:none"></div>
+    <div id="brewScore" class="score-box"></div>
+    <div class="button-row">
+      <button onclick="brewPotion()">Brew! 🧪</button>
+      <button onclick="newPotion()">New Potion</button>
+      <button class="speak-btn" onclick="speakBrewTask()">🔊 Listen</button>
+    </div>
+  </section>
+
   <!-- Items & Blocks -->
   <section class="section">
     <span class="badge badge-vocab">Materials</span>
@@ -439,26 +459,6 @@
     </div>
     <div class="button-row">
       <button class="speak-btn" onclick="speakDialogue()">🔊 Listen to the whole dialogue!</button>
-    </div>
-  </section>
-
-  <!-- Potion Brewing Game -->
-  <section class="section">
-    <span class="badge badge-game">Potion Game</span>
-    <h2>Brewing Potions / ポーションを醸造しよう</h2>
-    <p class="brew-instruction">
-      <span class="word" data-meaning="タップして単語を選んで、空欄に入れよう！">Tap a word to select it, then tap a blank to place it!</span>
-      <br><span class="word" data-meaning="3つの空欄を全部うめて、「Brew!」を押そう！">Fill all 3 blanks, then press "Brew!"</span>
-    </p>
-    <div id="brewTask" class="message-box">Press "New Potion" to start! / 「New Potion」を押してね！</div>
-    <div id="brewBlanks" class="blank-row"></div>
-    <div id="brewBank" class="word-bank"></div>
-    <div id="brewResult" class="message-box" style="display:none"></div>
-    <div id="brewScore" class="score-box"></div>
-    <div class="button-row">
-      <button onclick="brewPotion()">Brew! 🧪</button>
-      <button onclick="newPotion()">New Potion</button>
-      <button class="speak-btn" onclick="speakBrewTask()">🔊 Listen</button>
     </div>
   </section>
 
@@ -923,6 +923,7 @@
   }
 
   function selectBrewWord(word) {
+    closePopup();
     if (brewFilledBlanks.indexOf(word) !== -1) return;
     if (brewSelectedWord === word) {
       brewSelectedWord = null;
@@ -933,6 +934,7 @@
   }
 
   function tapBlank(index) {
+    closePopup();
     if (brewFilledBlanks[index]) {
       brewFilledBlanks[index] = null;
       brewSelectedWord = null;
