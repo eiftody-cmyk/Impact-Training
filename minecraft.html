@@ -242,6 +242,107 @@
       background: #ffffff;
       color: #000000;
     }
+
+    /* --- Brewing Game --- */
+    .brew-instruction {
+      margin-top: 10px;
+      color: #dfe6e9;
+      font-size: 0.95rem;
+    }
+    .blank-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+    .blank-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 130px;
+      min-height: 44px;
+      padding: 6px 14px;
+      border: 2px dashed #747d8c;
+      border-radius: 6px;
+      background: #2f3542;
+      color: #a4b0be;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .blank-slot.active {
+      border-color: #fbc531;
+      background: #3d3a1e;
+    }
+    .blank-slot.filled {
+      border-style: solid;
+      border-color: #2ed573;
+      background: #1e3a2a;
+      color: #f1f2f6;
+    }
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .word-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      min-height: 44px;
+      border-radius: 6px;
+      background: #44bd32;
+      border: 2px solid #2ed573;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.12s ease;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .word-btn:hover {
+      background: #2ed573;
+      transform: translateY(-1px);
+    }
+    .word-btn.selected {
+      background: #fbc531;
+      border-color: #f9ca24;
+      color: #2f3542;
+      transform: scale(1.05);
+    }
+    .word-btn.used {
+      background: #57606f;
+      border-color: #747d8c;
+      color: #a4b0be;
+      cursor: default;
+      opacity: 0.6;
+      transform: none;
+    }
+    .brew-correct {
+      animation: brewFlash 0.6s ease;
+    }
+    .brew-wrong {
+      animation: brewShake 0.5s ease;
+    }
+    @keyframes brewFlash {
+      0% { background: #1e272c; }
+      40% { background: #2ed573; color: #fff; }
+      100% { background: #1e272c; }
+    }
+    @keyframes brewShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
   </style>
 </head>
 <body>
@@ -281,6 +382,16 @@
       <li><span class="word" data-meaning="回復する・治す (かいふくする・なおす)">Heal</span></li>
       <li><span class="word" data-meaning="飼い慣らす (かいならす)">Tame</span></li>
       <li><span class="word" data-meaning="戦う・バトル (たたかう)">Battle</span></li>
+      <li><span class="word" data-meaning="醸造する・ブレンドする (じょうぞうする)">Brew</span></li>
+      <li><span class="word" data-meaning="材料 (ざいりょう)">Ingredient</span></li>
+      <li><span class="word" data-meaning="混ぜる (まぜる)">Mix</span></li>
+      <li><span class="word" data-meaning="合わせる (あわせる)">Combine</span></li>
+      <li><span class="word" data-meaning="ボトル・ガラス瓶">Bottle</span></li>
+      <li><span class="word" data-meaning="火炎耐性 (かえんたいせい)">Fire Resistance</span></li>
+      <li><span class="word" data-meaning="回復 (かいふく)">Healing</span></li>
+      <li><span class="word" data-meaning="強力 (きょうりょく)">Strength</span></li>
+      <li><span class="word" data-meaning="素早さ (すばやさ)">Swiftness</span></li>
+      <li><span class="word" data-meaning="夜間視力 (やかんしりょく)">Night Vision</span></li>
     </ul>
   </section>
 
@@ -328,6 +439,26 @@
     </div>
     <div class="button-row">
       <button class="speak-btn" onclick="speakDialogue()">🔊 Listen to the whole dialogue!</button>
+    </div>
+  </section>
+
+  <!-- Potion Brewing Game -->
+  <section class="section">
+    <span class="badge badge-game">Potion Game</span>
+    <h2>Brewing Potions / ポーションを醸造しよう</h2>
+    <p class="brew-instruction">
+      <span class="word" data-meaning="タップして単語を選んで、空欄に入れよう！">Tap a word to select it, then tap a blank to place it!</span>
+      <br><span class="word" data-meaning="3つの空欄を全部うめて、「Brew!」を押そう！">Fill all 3 blanks, then press "Brew!"</span>
+    </p>
+    <div id="brewTask" class="message-box">Press "New Potion" to start! / 「New Potion」を押してね！</div>
+    <div id="brewBlanks" class="blank-row"></div>
+    <div id="brewBank" class="word-bank"></div>
+    <div id="brewResult" class="message-box" style="display:none"></div>
+    <div id="brewScore" class="score-box"></div>
+    <div class="button-row">
+      <button onclick="brewPotion()">Brew! 🧪</button>
+      <button onclick="newPotion()">New Potion</button>
+      <button class="speak-btn" onclick="speakBrewTask()">🔊 Listen</button>
     </div>
   </section>
 
@@ -473,6 +604,7 @@
     const listenBtn = e.target.closest("#popup-listen");
     if (listenBtn) { listenPopup(); return; }
     if (e.target.closest("#popup")) return;
+    if (e.target.closest(".word-bank") || e.target.closest(".blank-row") || e.target.closest("#brewResult")) return;
     const word = e.target.closest(".word");
     if (!word) { closePopup(); return; }
     if (activeWord && activeWord !== word) activeWord.classList.remove("active");
@@ -689,6 +821,203 @@
   }
 
   updateScore();
+
+  /* ---------- Potion Brewing Game (tap-to-place) ---------- */
+  var BREW_POTIONS = [
+    {
+      name: "Fire Resistance",
+      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it makes you _____ to lava and fire!",
+      blanks: ["Fire Resistance", "Magma Cream", "immune"],
+      bank: ["Fire Resistance", "Magma Cream", "immune", "Sugar", "Slow", "Weak"]
+    },
+    {
+      name: "Healing",
+      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it _____ health instantly!",
+      blanks: ["Healing", "Glistering Melon Slice", "restores"],
+      bank: ["Healing", "Glistering Melon Slice", "restores", "Ghast Tear", "Drains", "Freezes"]
+    },
+    {
+      name: "Strength",
+      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it gives you a _____ boost!",
+      blanks: ["Strength", "Blaze Powder", "damage"],
+      bank: ["Strength", "Blaze Powder", "damage", "Rabbit's Foot", "Speed", "Poison"]
+    },
+    {
+      name: "Swiftness",
+      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it makes you _____!",
+      blanks: ["Swiftness", "Sugar", "fast"],
+      bank: ["Swiftness", "Sugar", "fast", "Spider Eye", "Invisible", "Heavy"]
+    },
+    {
+      name: "Night Vision",
+      sentence: "Brew a _____ Potion: Add _____ to an Awkward Potion — it lets you _____ in the dark!",
+      blanks: ["Night Vision", "Golden Carrot", "see"],
+      bank: ["Night Vision", "Golden Carrot", "see", "Magma Cream", "Hide", "Fall"]
+    }
+  ];
+
+  var brewSelectedWord = null;
+  var brewFilledBlanks = [null, null, null];
+  var brewCurrentPotion = null;
+  var brewScore = 0;
+  var brewTotal = 0;
+  var brewStreak = 0;
+  var brewLastIndex = -1;
+
+  function shuffleArray(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function renderBrewBlanks() {
+    var container = document.getElementById("brewBlanks");
+    container.innerHTML = "";
+    var parts = brewCurrentPotion.sentence.split("_____");
+    for (var i = 0; i < parts.length; i++) {
+      var span = document.createElement("span");
+      span.className = "brew-sentence-text";
+      span.textContent = parts[i];
+      container.appendChild(span);
+      if (i < brewFilledBlanks.length) {
+        var blank = document.createElement("span");
+        blank.className = "blank-slot";
+        blank.dataset.index = i;
+        if (brewFilledBlanks[i]) {
+          blank.textContent = brewFilledBlanks[i];
+          blank.classList.add("filled");
+        } else {
+          blank.textContent = "?";
+        }
+        blank.addEventListener("click", (function(idx) {
+          return function() { tapBlank(idx); };
+        })(i));
+        container.appendChild(blank);
+      }
+    }
+  }
+
+  function renderBrewBank() {
+    var container = document.getElementById("brewBank");
+    container.innerHTML = "";
+    var shuffled = shuffleArray(brewCurrentPotion.bank);
+    for (var i = 0; i < shuffled.length; i++) {
+      var btn = document.createElement("button");
+      btn.className = "word-btn brew-word-btn";
+      btn.textContent = shuffled[i];
+      btn.dataset.word = shuffled[i];
+      if (brewFilledBlanks.indexOf(shuffled[i]) !== -1) {
+        btn.classList.add("used");
+      }
+      if (brewSelectedWord === shuffled[i]) {
+        btn.classList.add("selected");
+      }
+      btn.addEventListener("click", (function(w) {
+        return function() { selectBrewWord(w); };
+      })(shuffled[i]));
+      container.appendChild(btn);
+    }
+  }
+
+  function selectBrewWord(word) {
+    if (brewFilledBlanks.indexOf(word) !== -1) return;
+    if (brewSelectedWord === word) {
+      brewSelectedWord = null;
+    } else {
+      brewSelectedWord = word;
+    }
+    renderBrewBank();
+  }
+
+  function tapBlank(index) {
+    if (brewFilledBlanks[index]) {
+      brewFilledBlanks[index] = null;
+      brewSelectedWord = null;
+      renderBrewBlanks();
+      renderBrewBank();
+      return;
+    }
+    if (brewSelectedWord) {
+      brewFilledBlanks[index] = brewSelectedWord;
+      brewSelectedWord = null;
+      renderBrewBlanks();
+      renderBrewBank();
+    }
+  }
+
+  function brewPotion() {
+    var resultBox = document.getElementById("brewResult");
+    if (!brewCurrentPotion) {
+      resultBox.style.display = "block";
+      resultBox.innerHTML = "<span class='word' data-meaning='まず「New Potion」を押してね！'>Press \"New Potion\" first!</span>";
+      return;
+    }
+    var empty = brewFilledBlanks.indexOf(null);
+    if (empty !== -1) {
+      resultBox.style.display = "block";
+      resultBox.innerHTML = "<span class='word' data-meaning='全部の空欄をうめてね！'>Fill all the blanks first!</span>";
+      return;
+    }
+    var correct = true;
+    for (var i = 0; i < brewFilledBlanks.length; i++) {
+      if (brewFilledBlanks[i] !== brewCurrentPotion.blanks[i]) {
+        correct = false;
+        break;
+      }
+    }
+    brewTotal++;
+    resultBox.style.display = "block";
+    if (correct) {
+      brewScore++;
+      brewStreak++;
+      resultBox.innerHTML = "🎉 <span class='word' data-meaning='すばらしい！'>Perfect brew!</span> " + brewCurrentPotion.name + " <span class='word' data-meaning='ポーションをえた！'>Potion acquired!</span>";
+      resultBox.classList.remove("brew-wrong");
+      resultBox.classList.add("brew-correct");
+      speak("Perfect brew! " + brewCurrentPotion.name + " Potion acquired!");
+    } else {
+      brewStreak = 0;
+      var answer = brewCurrentPotion.blanks.join(", ");
+      resultBox.innerHTML = "✖ <span class='word' data-meaning='ざんねん！'>Not quite!</span> <span class='word' data-meaning='こたえ'>Answer</span>: " + answer;
+      resultBox.classList.remove("brew-correct");
+      resultBox.classList.add("brew-wrong");
+      speak("Not quite! The answer is " + brewCurrentPotion.name + ".");
+    }
+    updateBrewScore();
+  }
+
+  function newPotion() {
+    var resultBox = document.getElementById("brewResult");
+    resultBox.style.display = "none";
+    resultBox.classList.remove("brew-correct", "brew-wrong");
+    brewSelectedWord = null;
+    brewFilledBlanks = [null, null, null];
+    var idx;
+    do {
+      idx = Math.floor(Math.random() * BREW_POTIONS.length);
+    } while (idx === brewLastIndex && BREW_POTIONS.length > 1);
+    brewLastIndex = idx;
+    brewCurrentPotion = BREW_POTIONS[idx];
+    var taskBox = document.getElementById("brewTask");
+    taskBox.innerHTML = "🧪 <strong>Brew a _____ Potion!</strong> <span class='word' data-meaning='" + brewCurrentPotion.name + "のポーションをつくれ！'>" + brewCurrentPotion.name + "</span>";
+    renderBrewBlanks();
+    renderBrewBank();
+  }
+
+  function speakBrewTask() {
+    if (!brewCurrentPotion) {
+      speak("Press New Potion to start!");
+      return;
+    }
+    speak("Brew a " + brewCurrentPotion.name + " Potion. " + brewCurrentPotion.sentence.replace(/_____/g, "blank"));
+  }
+
+  function updateBrewScore() {
+    document.getElementById("brewScore").textContent =
+      "Score: " + brewScore + " / " + brewTotal + "　🎯 Streak: " + brewStreak;
+  }
 </script>
 
 </body>
