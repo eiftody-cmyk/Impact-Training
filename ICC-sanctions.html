@@ -20,6 +20,7 @@ th{background:#edf4fa}
 #popup{position:fixed;left:20px;bottom:20px;width:min(350px,calc(100vw - 40px));background:#fff;border:1px solid #cbd5e0;border-radius:9px;box-shadow:0 5px 18px rgba(0,0,0,.18);padding:14px 16px;z-index:10}
 #popup-title{font-weight:bold;color:#2b6cb0;font-size:17px}
 #popup-kana{color:#52606d;margin:4px 0}
+#popup-meaning{color:#2d3748}
 </style>
 </head>
 <body>
@@ -169,4 +170,29 @@ th{background:#edf4fa}
 </div>
 
 <h2>Think about the article</h2>
-<div
+<div class="box">
+<p>日本の外交のバランスについて、あなたの意見を書いてみましょう。</p>
+</div>
+
+<div id="popup">
+  <div id="popup-title">クリックした単語</div>
+  <div id="popup-kana">かな：</div>
+  <div id="popup-meaning">意味：</div>
+</div>
+
+<script>
+  const popupTitle = document.getElementById('popup-title');
+  const popupKana = document.getElementById('popup-kana');
+  const popupMeaning = document.getElementById('popup-meaning');
+
+  document.querySelectorAll('.word').forEach(el => {
+    el.addEventListener('click', () => {
+      popupTitle.textContent = el.textContent;
+      popupKana.textContent = 'かな：' + el.getAttribute('data-kana');
+      popupMeaning.textContent = '意味：' + el.getAttribute('data-meaning');
+    });
+  });
+</script>
+
+</body>
+</html>
