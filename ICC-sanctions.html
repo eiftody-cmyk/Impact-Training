@@ -126,12 +126,20 @@ th{background:#edf4fa}
   <div id="popup-title">クリックした単語</div>
   <div id="popup-kana">かな：</div>
   <div id="popup-meaning">意味：</div>
+  <button id="popup-speak" onclick="speakWord()" style="margin-top:8px;padding:4px 12px;border:1px solid #3182ce;background:#3182ce;color:#fff;border-radius:5px;cursor:pointer;font-size:14px;">🔊 Listen</button>
 </div>
 
 <script>
   const popupTitle = document.getElementById('popup-title');
   const popupKana = document.getElementById('popup-kana');
   const popupMeaning = document.getElementById('popup-meaning');
+
+  function speakWord() {
+    const text = popupTitle.textContent;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    speechSynthesis.speak(utterance);
+  }
 
   document.querySelectorAll('.word').forEach(el => {
     el.addEventListener('click', () => {
