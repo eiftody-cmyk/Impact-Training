@@ -305,6 +305,169 @@
       60% { transform: translateX(-4px); }
       80% { transform: translateX(4px); }
     }
+
+    /* --- House Building Game --- */
+    .house-game-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 0;
+    }
+    .house-progress {
+      width: 100%;
+      max-width: 400px;
+    }
+    .house-progress-bar {
+      width: 100%;
+      height: 28px;
+      background: #1e272c;
+      border: 2px solid #747d8c;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .house-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #44bd32, #2ed573);
+      transition: width 0.5s ease;
+      border-radius: 4px;
+    }
+    .house-progress-text {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    }
+    .house-display {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 4px;
+      min-height: 180px;
+    }
+    .house-block {
+      width: 64px;
+      height: 32px;
+      border-radius: 3px;
+      opacity: 0;
+      transform: translateY(-20px) scale(0.8);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      border: 2px solid rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .house-block.placed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .house-block.placing {
+      animation: blockDrop 0.5s ease forwards;
+    }
+    .house-block.breaking {
+      animation: blockBreak 0.6s ease forwards;
+    }
+    .house-block .block-label {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6rem;
+      color: #a4b0be;
+      white-space: nowrap;
+    }
+    @keyframes blockDrop {
+      0% { opacity: 0; transform: translateY(-40px) scale(0.5); }
+      60% { opacity: 1; transform: translateY(4px) scale(1.1); }
+      80% { transform: translateY(-2px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes blockBreak {
+      0% { opacity: 1; transform: scale(1); filter: brightness(1); }
+      30% { filter: brightness(2); }
+      50% { opacity: 0.7; transform: scale(1.15); filter: brightness(1.5); }
+      100% { opacity: 0; transform: scale(0.3) rotate(20deg); filter: brightness(0.5); }
+    }
+    .house-jp {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fbc531;
+      text-align: center;
+      padding: 16px;
+      background: #1e272c;
+      border: 3px solid #fbc531;
+      border-radius: 8px;
+      min-width: 260px;
+      line-height: 1.4;
+    }
+    .house-input-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .house-input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 4px;
+      border: 2px solid #00a8ff;
+      background: #1e272c;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1.1rem;
+      min-height: 44px;
+      outline: none;
+    }
+    .house-input:focus {
+      border-color: #2ed573;
+      box-shadow: 0 0 8px rgba(46,213,115,0.4);
+    }
+    .house-input.wrong-shake {
+      animation: inputShake 0.4s ease;
+    }
+    @keyframes inputShake {
+      0%, 100% { transform: translateX(0); border-color: #e84118; }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .house-msg {
+      font-size: 1rem;
+      min-height: 30px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .house-msg.correct { color: #2ed573; }
+    .house-msg.wrong { color: #e84118; }
+    .house-msg.info { color: #fbc531; }
+    .house-win {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #2ed573, #26af5f);
+      border-radius: 12px;
+      color: #fff;
+      animation: winPulse 1s ease infinite alternate;
+    }
+    .house-win.show { display: block; }
+    .house-win h3 {
+      font-size: 1.8rem;
+      margin: 0 0 8px 0;
+    }
+    .house-win p {
+      margin: 4px 0;
+      font-size: 1rem;
+    }
+    @keyframes winPulse {
+      0% { box-shadow: 0 0 12px rgba(46,213,115,0.4); }
+      100% { box-shadow: 0 0 24px rgba(46,213,115,0.8); }
+    }
+    .badge-build { background: #e84118; }
   </style>
 </head>
 <body>
@@ -363,6 +526,41 @@
       <li><span class="word" data-meaning="クモの目">Spider Eye</span></li>
       <li><span class="word" data-meaning="フグ">Pufferfish</span></li>
     </ul>
+  </section>
+
+  <!-- House Building Game -->
+  <section class="section">
+    <span class="badge badge-build">Build</span>
+    <h2>Build Your House / 家を建てよう</h2>
+    <p>Type the English word for each Japanese definition. Build a house with 10 correct answers!</p>
+    <div class="house-game-wrap">
+      <div class="house-display" id="houseDisplay"></div>
+      <div class="house-progress">
+        <div class="house-progress-bar">
+          <div class="house-progress-fill" id="houseProgressFill" style="width:0%"></div>
+          <div class="house-progress-text" id="houseProgressText">0 / 10</div>
+        </div>
+      </div>
+      <div class="house-jp" id="houseQuestion">Press "New Word" to start!</div>
+      <div class="house-msg info" id="houseMsg">Get 10 right to build the house!</div>
+      <div class="house-input-row">
+        <input type="text" class="house-input" id="houseInput" placeholder="Type the English word..." autocomplete="off" disabled />
+        <button onclick="checkHouseWord()" id="houseSubmitBtn" disabled>Build!</button>
+      </div>
+      <div class="button-row">
+        <button onclick="nextHouseWord()" id="houseNewWordBtn">New Word</button>
+        <button onclick="resetHouseGame()">Reset</button>
+        <button class="speak-btn" onclick="speakHouseWord()">🔊 Listen</button>
+      </div>
+      <div class="house-win" id="houseWin">
+        <h3>🎉 House Complete! 家が完成した！ 🎉</h3>
+        <p>You built the whole house with 10 correct answers!</p>
+        <p>10個のこたえであなたの家をたてました！</p>
+        <div class="button-row" style="justify-content:center">
+          <button onclick="resetHouseGame()">Play Again!</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Potion Quiz -->
@@ -913,6 +1111,197 @@
     document.getElementById("quizScore").textContent =
       "Score: " + quizScore + " / " + quizTotal + "　🎯 Streak: " + quizStreak;
   }
+
+  /* ============================================================
+     HOUSE BUILDING MATCHING GAME
+     ============================================================ */
+  var HOUSE_WORDS = [
+    { jp: "掘る (ほる)", en: "mine" },
+    { jp: "作る・クラフトする", en: "craft" },
+    { jp: "建設する (けんせつする)", en: "build" },
+    { jp: "探検する (たんけんする)", en: "explore" },
+    { jp: "隠れ家・家 (かくれが)", en: "shelter" },
+    { jp: "装備・道具 (そうび)", en: "equipment" },
+    { jp: "交易する・取引する", en: "trade" },
+    { jp: "必要とする・必要だ (いります)", en: "need" },
+    { jp: "進化する (しんかする)", en: "evolve" },
+    { jp: "こうげきする (攻撃する)", en: "attack" },
+    { jp: "まもる (守る)", en: "protect" },
+    { jp: "タイプ・種類 (しゅるい)", en: "type" },
+    { jp: "わざ (属性の力)", en: "move" },
+    { jp: "当てる・当ててみる (あてる)", en: "guess" },
+    { jp: "説明する (せつめいする)", en: "describe" },
+    { jp: "えらぶ (選ぶ)", en: "choose" },
+    { jp: "つかまえる (捕まえる)", en: "catch" },
+    { jp: "あつめる (集める)", en: "collect" },
+    { jp: "たおす (倒す)", en: "defeat" },
+    { jp: "回復する・治す (かいふくする・なおす)", en: "heal" },
+    { jp: "飼い慣らす (かいならす)", en: "tame" },
+    { jp: "戦う・バトル (たたかう)", en: "battle" },
+    { jp: "醸造する・ブレンドする (じょうぞうする)", en: "brew" },
+    { jp: "材料 (ざいりょう)", en: "ingredient" },
+    { jp: "混ぜる (まぜる)", en: "mix" },
+    { jp: "合わせる (あわせる)", en: "combine" },
+    { jp: "ボトル・ガラス瓶", en: "bottle" },
+    { jp: "火炎耐性 (かえんたいせい)", en: "fire resistance" },
+    { jp: "回復 (かいふく)", en: "healing" },
+    { jp: "強力 (きょうりょく)", en: "strength" },
+    { jp: "素早さ (すばやさ)", en: "swiftness" },
+    { jp: "夜間視力 (やかんしりょく)", en: "night vision" },
+    { jp: "マグマクリーム", en: "magma cream" },
+    { jp: "砂糖 (さとう)", en: "sugar" },
+    { jp: "ブレイズパウダー", en: "blaze powder" },
+    { jp: "ゲーストの涙", en: "ghast tear" },
+    { jp: "光るスイカの切り身", en: "glistering melon slice" },
+    { jp: "金のニンジン", en: "golden carrot" },
+    { jp: "クモの目", en: "spider eye" },
+    { jp: "フグ", en: "pufferfish" }
+  ];
+
+  var HOUSE_BLOCK_COLORS = [
+    { bg: "#6b6b6b", border: "#555", label: "Stone" },
+    { bg: "#8B7355", border: "#6d5a43", label: "Cobblestone" },
+    { bg: "#8B8B8B", border: "#707070", label: "Stone" },
+    { bg: "#8B6914", border: "#6d5310", label: "Wood Plank" },
+    { bg: "#A0522D", border: "#7a3d21", label: "Wood Plank" },
+    { bg: "#87CEEB", border: "#5faed4", label: "Glass" },
+    { bg: "#8B4513", border: "#6b340f", label: "Oak Door" },
+    { bg: "#8B6914", border: "#6d5310", label: "Wood Plank" },
+    { bg: "#B22222", border: "#8c1b1b", label: "Brick" },
+    { bg: "#B22222", border: "#8c1b1b", label: "Brick Roof" }
+  ];
+
+  var houseScore = 0;
+  var houseTotal = 10;
+  var houseCurrentWord = null;
+  var houseUsedIndices = [];
+  var houseGameOver = false;
+
+  function initHouseDisplay() {
+    var container = document.getElementById("houseDisplay");
+    container.innerHTML = "";
+    for (var i = 0; i < houseTotal; i++) {
+      var block = document.createElement("div");
+      block.className = "house-block";
+      block.id = "houseBlock" + i;
+      block.style.backgroundColor = HOUSE_BLOCK_COLORS[i].bg;
+      block.style.borderColor = HOUSE_BLOCK_COLORS[i].border;
+      block.style.width = (80 + i * 4) + "px";
+      var lbl = document.createElement("span");
+      lbl.className = "block-label";
+      lbl.textContent = HOUSE_BLOCK_COLORS[i].label;
+      block.appendChild(lbl);
+      container.appendChild(block);
+    }
+  }
+
+  function updateHouseProgress() {
+    var pct = (houseScore / houseTotal) * 100;
+    document.getElementById("houseProgressFill").style.width = pct + "%";
+    document.getElementById("houseProgressText").textContent = houseScore + " / " + houseTotal;
+  }
+
+  function nextHouseWord() {
+    if (houseGameOver) return;
+    if (houseUsedIndices.length >= HOUSE_WORDS.length) {
+      houseUsedIndices = [];
+    }
+    var idx;
+    do {
+      idx = Math.floor(Math.random() * HOUSE_WORDS.length);
+    } while (houseUsedIndices.indexOf(idx) !== -1);
+    houseUsedIndices.push(idx);
+    houseCurrentWord = HOUSE_WORDS[idx];
+
+    document.getElementById("houseQuestion").textContent = houseCurrentWord.jp;
+    document.getElementById("houseMsg").textContent = "Type the English word!";
+    document.getElementById("houseMsg").className = "house-msg info";
+    document.getElementById("houseInput").value = "";
+    document.getElementById("houseInput").disabled = false;
+    document.getElementById("houseSubmitBtn").disabled = false;
+    document.getElementById("houseNewWordBtn").disabled = true;
+    document.getElementById("houseInput").focus();
+  }
+
+  function checkHouseWord() {
+    if (!houseCurrentWord || houseGameOver) return;
+    var input = document.getElementById("houseInput");
+    var msg = document.getElementById("houseMsg");
+    var answer = input.value.trim().toLowerCase();
+    var correct = houseCurrentWord.en.toLowerCase();
+
+    if (!answer) {
+      msg.textContent = "Type a word first!";
+      msg.className = "house-msg info";
+      return;
+    }
+
+    if (answer === correct) {
+      msg.textContent = "Correct! " + houseCurrentWord.en + " ✓";
+      msg.className = "house-msg correct";
+      speak(houseCurrentWord.en);
+
+      var block = document.getElementById("houseBlock" + houseScore);
+      block.classList.add("placing");
+      houseScore++;
+      updateHouseProgress();
+
+      input.disabled = true;
+      document.getElementById("houseSubmitBtn").disabled = true;
+
+      if (houseScore >= houseTotal) {
+        houseGameOver = true;
+        document.getElementById("houseWin").classList.add("show");
+        document.getElementById("houseQuestion").textContent = "House Complete! 家が完成した！";
+        speak("House complete! You win!");
+      } else {
+        setTimeout(function () {
+          document.getElementById("houseNewWordBtn").disabled = false;
+        }, 600);
+      }
+    } else {
+      msg.textContent = "Try again! ざんねん！";
+      msg.className = "house-msg wrong";
+      input.classList.add("wrong-shake");
+      setTimeout(function () { input.classList.remove("wrong-shake"); }, 400);
+      input.focus();
+    }
+  }
+
+  function resetHouseGame() {
+    houseScore = 0;
+    houseUsedIndices = [];
+    houseCurrentWord = null;
+    houseGameOver = false;
+    document.getElementById("houseWin").classList.remove("show");
+    document.getElementById("houseInput").value = "";
+    document.getElementById("houseInput").disabled = true;
+    document.getElementById("houseSubmitBtn").disabled = true;
+    document.getElementById("houseNewWordBtn").disabled = false;
+    document.getElementById("houseQuestion").textContent = "Press \"New Word\" to start!";
+    document.getElementById("houseMsg").textContent = "Get 10 right to build the house!";
+    document.getElementById("houseMsg").className = "house-msg info";
+    updateHouseProgress();
+    initHouseDisplay();
+  }
+
+  function speakHouseWord() {
+    if (!houseCurrentWord) {
+      speak("Press New Word to start!");
+      return;
+    }
+    speak(houseCurrentWord.en);
+  }
+
+  document.getElementById("houseInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      checkHouseWord();
+    }
+  });
+
+  initHouseDisplay();
+  updateHouseProgress();
 </script>
 
 </body>
